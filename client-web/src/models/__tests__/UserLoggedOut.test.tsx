@@ -39,7 +39,7 @@ describe('try to login with the right credentials', () => {
 describe('try to login with the wrong credentials', () => {
     const email = 'the_wrong_email';
     const password = 'the_wrong_password';
-    const serverResponse = { status: 500 };
+    const serverResponse = { status: 401 };
     let store: any;
 
     beforeAll(async () => {
