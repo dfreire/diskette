@@ -12,12 +12,14 @@ interface State { };
 
 class Content extends React.Component<Props, State> {
     render() {
-        return this.props.contentPage.content.type.length > 0 && (
-            <div className="flex flex-col md:flex-row">
-                <div className="w-full md:w-2/3 p-4">
+        const hasType = this.props.contentPage.content.type.length > 0;
+
+        return hasType && (
+            <div className={classes.container}>
+                <div className={classes.formContainer}>
                     <Form {...this.props} />
                 </div>
-                <div className="w-full md:w-1/3 p-4 bg-grey-lightest">
+                <div className={classes.subDirsContainer}>
                     <SubDirs {...this.props} />
                 </div>
             </div>
@@ -39,6 +41,12 @@ class Content extends React.Component<Props, State> {
         this.props.onLoad({ pathname });
     }
 }
+
+const classes = {
+    container: 'flex flex-col md:flex-row',
+    formContainer: 'w-full md:w-2/3 p-4',
+    subDirsContainer: 'w-full md:w-1/3 p-4 bg-grey-lightest',
+};
 
 const mapState = (models: { content: ContentModel.State }) => ({
     contentPage: models.content.contentPage,

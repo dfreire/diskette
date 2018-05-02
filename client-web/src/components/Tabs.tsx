@@ -35,14 +35,16 @@ class Tabs extends React.Component<Props, State> {
 }
 
 const Tab = (props: { title: string; active: boolean; onClick: { (evt: any): void } }) => {
+    const className = props.active ? classes.activeTab : classes.regularTab;
+
     return (
-        <a href="" className={props.active ? classNames.activeTab : classNames.regularTab} onClick={props.onClick}>
+        <a className={className} onClick={props.onClick} href="">
             <div>{props.title}</div>
         </a>
     );
 };
 
-const classNames = {
+const classes = {
     regularTab: "inline-block mr-3 mb-3 p-1 no-underline text-grey",
     activeTab: "inline-block mr-3 mb-3 p-1 no-underline text-black border-b-2 border-black",
 };

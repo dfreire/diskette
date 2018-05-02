@@ -8,17 +8,22 @@ import * as UserModel from './models/User';
 const { Icon } = require('react-fa');
 
 interface Props extends UserModel.State, UserModel.Dispatch {
+	location: Location;
 }
 
 class App extends React.Component<Props, {}> {
 	render() {
 		const isLoggedIn = this.props.sessionToken.length > 0;
-		const widthClass = isLoggedIn ? 'max-w-xl' : 'max-w-xs';
+
+		const containerClasses = [
+			classes.container,
+			isLoggedIn ? classes.containerLoggedIn : classes.containerLoggedOut,
+		].join(' ');
 
 		return (
-			<div className={`container mx-auto bg-white rounded shadow-lg ${widthClass} font-sans`}>
-				<div className="flex bg-black rounded-t">
-					<div className="flex-1 text-white p-4"><h2>Diskette</h2></div>
+			<div className={containerClasses}>
+				<div className={classes.headerContainer}>
+					<div className={classes.headerContent}><h2>Diskette</h2></div>
 					{isLoggedIn && this._renderLogout()}
 				</div>
 				{isLoggedIn ? this._renderLoggedIn() : this._renderLoggedOut()}
@@ -29,7 +34,7 @@ class App extends React.Component<Props, {}> {
 	_renderLoggedIn() {
 		return (
 			<div>
-				<Breadcrumb />
+				<Breadcrumb {...this.props} />
 				<Switch>
 					<Route path="/content" component={Content} />
 					<Redirect to="/content" />
@@ -40,13 +45,10 @@ class App extends React.Component<Props, {}> {
 
 	_renderLogout() {
 		return (
-			<div className="">
-				<button
-					className="rounded-tr rounded-bl text-grey hover:bg-grey-darkest hover:text-white font-thin p-2 w-8 font-mono"
-					onClick={this.props.logout}
-				>
+			<div>
+				<button className={classes.logoutButton} onClick={this.props.logout}>
 					<Icon name="times" />
-			</button>
+				</button>
 			</div>
 		);
 	}
@@ -60,6 +62,15 @@ class App extends React.Component<Props, {}> {
 		);
 	}
 }
+
+const classes = {
+	container: 'container mx-auto bg-white rounded shadow-lg font-sans',
+	containerLoggedOut: 'max-w-xs',
+	containerLoggedIn: 'max-w-xl',
+	headerContainer: 'flex bg-black rounded-t',
+	headerContent: 'flex-1 text-white p-4',
+	logoutButton: 'rounded-tr rounded-bl text-grey hover:bg-grey-darkest hover:text-white font-thin p-2 w-8 font-mono',
+};
 
 const mapState = (models: { user: UserModel.State }) => ({
 	sessionToken: models.user.sessionToken,

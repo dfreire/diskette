@@ -7,13 +7,13 @@ interface Props {
 }
 
 const TextField = (props: Props) => (
-    <div className={classNames.field}>
-        <label className={classNames.label}>{props.label}</label>
-        <input className={classNames.input} type="text" value={props.value} onChange={evt => props.onChange(evt.target.value)} />
+    <div className={classes.field}>
+        <label className={classes.label}>{props.label}</label>
+        <input className={classes.input} type="text" value={props.value} onChange={evt => props.onChange(evt.target.value)} />
     </div>
 );
 
-const classNames = {
+const classes = {
     field: "w-full py-2",
     label: "block pb-2 text-grey-darkest font-medium",
     input: "block p-2 w-full border rounded",

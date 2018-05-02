@@ -4,8 +4,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { init } from '@rematch/core';
 import registerServiceWorker from './registerServiceWorker';
-import App from './App';
 import * as models from './models';
+import App from './App';
 import 'tailwindcss/dist/tailwind.min.css';
 import './index.css';
 

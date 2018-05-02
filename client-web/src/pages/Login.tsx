@@ -8,7 +8,7 @@ interface Props extends UserModel.State, UserModel.Dispatch {
 }
 
 const Login = (props: Props) => (
-    <div className="p-4">
+    <div className={classes.container}>
         <form>
             <EmailField
                 label="Email"
@@ -20,14 +20,23 @@ const Login = (props: Props) => (
                 value={props.loginPage.password}
                 onChange={value => props.onLoginPageChangeField({ key: 'password', value })}
             />
-            <div className={classNames.group}>
-                <button className={classNames.button} onClick={(evt) => { evt.preventDefault(); props.login(); }}>Login</button>
+            <div className={classes.group}>
+                <button
+                    className={classes.button}
+                    onClick={(evt) => {
+                        evt.preventDefault();
+                        props.login();
+                    }}
+                >
+                    Login
+                </button>
             </div>
         </form>
     </div>
 );
 
-const classNames = {
+const classes = {
+    container: 'p-4',
     group: "w-full py-2",
     label: "block pb-2 text-grey-darkest font-medium",
     input: "block p-2 w-full border rounded",

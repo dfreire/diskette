@@ -7,10 +7,10 @@ interface Props {
 }
 
 const TextAreaField = (props: Props) => (
-    <div className={classNames.field}>
-        <label className={classNames.label}>{props.label}</label>
+    <div className={classes.field}>
+        <label className={classes.label}>{props.label}</label>
         <textarea
-            className={classNames.textarea}
+            className={classes.textarea}
             value={props.value}
             onChange={evt => props.onChange(evt.target.value)}
             rows={10}
@@ -18,7 +18,7 @@ const TextAreaField = (props: Props) => (
     </div>
 );
 
-const classNames = {
+const classes = {
     field: "w-full py-2",
     label: "block pb-2 text-grey-darkest font-medium",
     textarea: "block p-2 w-full border rounded leading-normal",

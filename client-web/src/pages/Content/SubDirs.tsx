@@ -10,13 +10,13 @@ interface Props extends ContentModel.State, ContentModel.Dispatch {
 
 const SubDirs = (props: Props) => {
     return (
-        <div className="text-sm">
-            <div className="p-2 md:px-3">
-                <button className={"w-full bg-green hover:bg-green-light text-white p-3 rounded"}>
+        <div className={classes.container}>
+            <div className={classes.addButtonContainer}>
+                <button className={classes.addButton}>
                     <Icon name="plus" />
                 </button>
             </div>
-            <ul className="list-reset">
+            <ul className={classes.dirList}>
                 {props.contentPage.content.subDirs.map((name, i) => (
                     <SubDir key={name} location={props.location} name={name} />
                 ))}
@@ -29,13 +29,29 @@ const SubDir = (props: { location: Location; name: string; }) => {
     const to = [props.location.pathname, props.name].join('/');
 
     return (
-        <li className={"group flex md:pl-1 hover:bg-grey-lighter"}>
-            <Link to={to} className="flex-1 p-3 text-grey-darker hover:text-black no-underline truncate" title={props.name}>{props.name}</Link>
-            <button className="invisible group-hover:visible m-1 mr-0 p-1 text-grey hover:text-black"><Icon name="cog" /></button>
-            <button className="invisible group-hover:visible m-1 mr-3 p-1 text-grey hover:text-black"><Icon name="trash" /></button>
+        <li className={classes.dirItem}>
+            <Link to={to} className={classes.dirItemLink} title={props.name}>{props.name}</Link>
+            <span className={classes.dirItemButtons}>
+                <button className={classes.dirItemButton}><Icon name="cog" /></button>
+                <button className={classes.dirItemButton}><Icon name="trash" /></button>
+            </span>
         </li>
     );
 }
+
+const classes = {
+    container: 'text-sm',
+
+    addButtonContainer: 'p-2 md:px-3',
+    addButton: 'w-full bg-green hover:bg-green-light text-white p-3 rounded',
+
+    dirList: 'list-reset',
+    dirItem: 'group flex md:pl-1 hover:bg-grey-lighter',
+
+    dirItemLink: 'flex-1 p-3 text-grey-darker hover:text-black no-underline truncate',
+    dirItemButtons: 'invisible group-hover:visible p-3',
+    dirItemButton: 'px-1 text-grey hover:text-black',
+};
 
 const mapState = (models: { content: ContentModel.State }) => ({
     contentPage: models.content.contentPage,
