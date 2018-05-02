@@ -6,5 +6,5 @@ export function logoutIf401(axiosErr: any) {
 
 export function logout() {
     localStorage.removeItem('sessionToken');
-    window.location.href = '/login';
+    window.location.assign('/login');
 }

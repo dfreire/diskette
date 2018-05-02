@@ -1,4 +1,6 @@
-import axios from 'axios';
+import { AxiosStatic } from 'axios';
+const axios: AxiosStatic = require('axios'); // used require because it has a mock in 'src/__mocks__'
+import { dispatch } from "@rematch/core";
 import { logout } from './util';
 
 export interface State {
@@ -20,7 +22,7 @@ export interface Dispatch {
     logout: { (): void };
 };
 
-const INITIAL_STATE: State = {
+export const INITIAL_STATE: State = {
     sessionToken: localStorage.getItem('sessionToken') || '',
 
     loginPage: {
@@ -53,12 +55,12 @@ const effects = {
             if (res.status === 200) {
                 const sessionToken = res.data;
                 localStorage.setItem('sessionToken', sessionToken);
-                window.location.href = '/home';
+                window.location.assign('/content');
             }
         } catch (err) {
-            console.error(err);
-            console.log('err.response', err.response);
-            dispath(this).onLoginError();
+            // console.error(err);
+            // console.log('err.response', err.response);
+            ((dispatch as any).user as Dispatch).onLoginError();
         }
     },
 
@@ -66,10 +68,6 @@ const effects = {
         logout();
     },
 };
-
-function dispath(that: any) {
-    return (that as any) as Dispatch;
-}
 
 export const user = {
     state: { ...INITIAL_STATE },
