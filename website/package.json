@@ -1,0 +1,38 @@
+{
+  "name": "react-static-example-basic",
+  "version": "1.0.1",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "compile": "tsc",
+    "compile-watch": "tsc --watch",
+    "start": "react-static start",
+    "stage": "react-static build --staging",
+    "build": "react-static build",
+    "serve": "serve dist -p 3000"
+  },
+  "dependencies": {
+    "axios": "^0.16.2",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "react-hot-loader": "^4.1.1",
+    "react-router": "^4.2.0",
+    "react-static": "^5.8.1",
+    "react-static-routes": "^1.0.0",
+    "tailwindcss": "^0.5.2"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/node": "^9.6.6",
+    "@types/react": "^16.3.12",
+    "@types/react-dom": "^16.0.5",
+    "@types/react-router": "^4.0.23",
+    "eslint-config-react-tools": "1.x.x",
+    "serve": "^6.1.0",
+    "tslib": "^1.9.0",
+    "tslint": "^5.9.1",
+    "tslint-microsoft-contrib": "^5.0.3",
+    "tsutils": "^2.26.1",
+    "typescript": "^2.8.3"
+  }
+}
