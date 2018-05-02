@@ -51,7 +51,6 @@ export async function getByEmailSha1(emailSha1: String): Promise<User> {
     } catch (err) {
         return undefined;
     }
-
 }
 
 async function save(user: User) {

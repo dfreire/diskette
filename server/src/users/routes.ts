@@ -29,14 +29,14 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/set-email', authenticate, async (req, res) => {
-    const user = req.user;
+    const user = req['user'];
     const { newEmail } = req.body;
     await model.setEmail(user.email, newEmail);
     res.sendStatus(200);
 });
 
 router.post('/set-password', authenticate, async (req, res) => {
-    const user = req.user;
+    const user = req['user'];
     const { newPassword } = req.body;
     await model.setPassword(user.email, newPassword);
     res.sendStatus(200);
