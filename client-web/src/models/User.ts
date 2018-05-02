@@ -1,6 +1,5 @@
 import { AxiosStatic } from 'axios';
 const axios: AxiosStatic = require('axios'); // used require because it has a mock in 'src/__mocks__'
-import { dispatch } from "@rematch/core";
 import { logout } from './util';
 
 export interface State {
@@ -60,7 +59,7 @@ const effects = {
         } catch (err) {
             // console.error(err);
             // console.log('err.response', err.response);
-            ((dispatch as any).user as Dispatch).onLoginError();
+            (this as any).onLoginError();
         }
     },
 

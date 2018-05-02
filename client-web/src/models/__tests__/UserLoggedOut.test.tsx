@@ -1,76 +1,68 @@
 const axios = require('axios'); // will find mock at 'src/__mocks__'
-import { dispatch } from "@rematch/core";
-import { user } from '../User';
+import { init } from "@rematch/core";
+import { user, State, Dispatch } from '../User';
 
-const INITIAL_STATE = { ...user.state };
+window.location.assign = jest.fn();
 
-describe('when the user is logged out and tries to login', () => {
-    
-    describe('using the right credentials', () => {
-        const email = 'the_right_email';
-        const password = 'the_right_password';
-        const sessionToken = 'a_session_token';
-        const serverResponse = { status: 200, data: sessionToken };
+describe('try to login with the right credentials', () => {
+    const email = 'the_right_email';
+    const password = 'the_right_password';
+    const sessionToken = 'a_session_token';
+    const serverResponse = { status: 200, data: sessionToken };
 
-        beforeAll(async () => {
-            // prepare the mocks
-            axios.post.mockClear();
-            axios.post.mockImplementationOnce(() => Promise.resolve(serverResponse));
-            window.location.assign = jest.fn();
+    beforeAll(async () => {
+        localStorage.clear();
+        axios.post.mockClear();
+        axios.post.mockImplementationOnce(() => Promise.resolve(serverResponse));
 
-            // prepare the state
-            user.state = INITIAL_STATE;
-            user.state.loginPage.email = email;
-            user.state.loginPage.password = password;
-            const rootState = { user: user.state };
+        const store = init({ models: { user } });
+        (store.dispatch['user'] as Dispatch).onLoginPageChangeField({ key: 'email', value: email });
+        (store.dispatch['user'] as Dispatch).onLoginPageChangeField({ key: 'password', value: password });
 
-            // execute
-            await user.effects.login({}, rootState);
-        });
-
-        it('sends the right credentials to the backend', () => {
-            expect(axios.post).toHaveBeenCalledTimes(1);
-            expect(axios.post).toHaveBeenCalledWith('/api/users/login', { email, password });
-        });
-
-        it('should store the sesstionToken in the localStorage', () => {
-            expect(window.localStorage.getItem('sessionToken')).toEqual(sessionToken);
-        });
-
-        it('should redirect to the content page', () => {
-            expect(window.location.assign).toHaveBeenCalledTimes(1);
-            expect(window.location.assign).toHaveBeenCalledWith('/content');
-        });
+        await (store.dispatch['user'] as Dispatch).login();
     });
 
-    describe('using the wrong credentials', () => {
-        const email = 'the_wrong_email';
-        const password = 'the_wrong_password';
+    it('sends the right credentials to the backend', () => {
+        expect(axios.post).toHaveBeenCalledWith('/api/users/login', { email, password });
+    });
 
-        beforeAll(async () => {
-            // prepare the mocks
-            axios.post.mockClear();
-            axios.post = jest.fn();
-            axios.post.mockImplementationOnce(() => Promise.reject({}));
-            (dispatch as any).user = { onLoginError: jest.fn() };
+    it('should store the sesstionToken in the localStorage', () => {
+        expect(window.localStorage.getItem('sessionToken')).toEqual(sessionToken);
+    });
 
-            // prepare the state
-            user.state = INITIAL_STATE;
-            user.state.loginPage.email = email;
-            user.state.loginPage.password = password;
-            const rootState = { user: user.state };
+    it('should redirect to the content page', () => {
+        expect(window.location.assign).toHaveBeenCalledTimes(1);
+        expect(window.location.assign).toHaveBeenCalledWith('/content');
+    });
+});
 
-            // execute
-            await user.effects.login({}, rootState);
-        });
+describe('try to login with the wrong credentials', () => {
+    const email = 'the_wrong_email';
+    const password = 'the_wrong_password';
+    const serverResponse = { status: 500 };
+    let store: any;
 
-        it('sends the wrong credentials to the backend', () => {
-            expect(axios.post).toHaveBeenCalledTimes(1);
-            expect(axios.post).toHaveBeenCalledWith('/api/users/login', { email, password });
-        });
+    beforeAll(async () => {
+        localStorage.clear();
+        axios.post.mockClear();
+        axios.post.mockImplementationOnce(() => Promise.reject(serverResponse));
 
-        it('should report an error', () => {
-            expect((dispatch as any).user.onLoginError).toHaveBeenCalledTimes(1);
-        });
+        store = init({ models: { user } });
+        (store.dispatch['user'] as Dispatch).onLoginPageChangeField({ key: 'email', value: email });
+        (store.dispatch['user'] as Dispatch).onLoginPageChangeField({ key: 'password', value: password });
+
+        await (store.dispatch['user'] as Dispatch).login();
+    });
+
+    it('sends the wrong credentials to the backend', () => {
+        expect(axios.post).toHaveBeenCalledWith('/api/users/login', { email, password });
+    });
+
+    it('should report an error', () => {
+        expect((store.getState().user as State).loginPage.errorMessage).toEqual('Access Denied');
+    });
+
+    it('should not have any sesstionToken stored in the localStorage', () => {
+        expect(window.localStorage.getItem('sessionToken')).toBeNull();
     });
 });
