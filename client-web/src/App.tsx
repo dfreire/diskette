@@ -14,26 +14,18 @@ interface Props extends UserModel.State, UserModel.Dispatch {
 class App extends React.Component<Props, {}> {
 	render() {
 		const isLoggedIn = this.props.sessionToken.length > 0;
-
-		const containerClasses = [
-			classes.container,
-			isLoggedIn ? classes.containerLoggedIn : classes.containerLoggedOut,
-		].join(' ');
-
-		return (
-			<div className={containerClasses}>
-				<div className={classes.headerContainer}>
-					<div className={classes.headerContent}><h2>Diskette</h2></div>
-					{isLoggedIn && this._renderLogout()}
-				</div>
-				{isLoggedIn ? this._renderLoggedIn() : this._renderLoggedOut()}
-			</div>
-		);
+		return isLoggedIn ? this._renderLoggedIn() : this._renderLoggedOut();
 	}
 
 	_renderLoggedIn() {
 		return (
-			<div>
+			<div className={[classes.container, classes.containerLoggedIn].join(' ')}>
+				<div className={classes.headerContainer}>
+					<h2 className={classes.headerTitle}>Diskette</h2>
+					<button className={classes.headerLogoutButton} onClick={this.props.logout}>
+						<Icon name="times" />
+					</button>
+				</div>
 				<Breadcrumb {...this.props} />
 				<Switch>
 					<Route path="/content" component={Content} />
@@ -43,22 +35,17 @@ class App extends React.Component<Props, {}> {
 		);
 	}
 
-	_renderLogout() {
-		return (
-			<div>
-				<button className={classes.logoutButton} onClick={this.props.logout}>
-					<Icon name="times" />
-				</button>
-			</div>
-		);
-	}
-
 	_renderLoggedOut() {
 		return (
-			<Switch>
-				<Route path="/login" component={Login} />
-				<Redirect to="/login" />
-			</Switch>
+			<div className={[classes.container, classes.containerLoggedOut].join(' ')}>
+				<div className={classes.headerContainer}>
+					<div className={classes.headerTitle}><h2>Diskette</h2></div>
+				</div>
+				<Switch>
+					<Route path="/login" component={Login} />
+					<Redirect to="/login" />
+				</Switch>
+			</div>
 		);
 	}
 }
@@ -68,8 +55,8 @@ const classes = {
 	containerLoggedOut: 'max-w-xs',
 	containerLoggedIn: 'max-w-xl',
 	headerContainer: 'flex bg-black rounded-t',
-	headerContent: 'flex-1 text-white p-4',
-	logoutButton: 'rounded-tr rounded-bl text-grey hover:bg-grey-darkest hover:text-white font-thin p-2 w-8 font-mono',
+	headerTitle: 'flex-1 text-white p-4',
+	headerLogoutButton: 'w-8 h-8 rounded-tr p-2 rounded-bl text-grey hover:bg-grey-darkest hover:text-white font-thin font-mono',
 };
 
 const mapState = (models: { user: UserModel.State }) => ({
