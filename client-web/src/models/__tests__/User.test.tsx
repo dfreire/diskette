@@ -28,15 +28,15 @@ describe('when the user is logged out', () => {
             await (store.dispatch['user'] as Dispatch).login();
         });
 
-        it('sends the right credentials to the backend', () => {
+        it('the right credentials are sent to the backend', () => {
             expect(axios.post).toHaveBeenCalledWith('/api/users/login', { email, password });
         });
 
-        it('should store the sesstionToken in the localStorage', () => {
+        it('the sesstionToken in stored in the localStorage', () => {
             expect(window.localStorage.getItem('sessionToken')).toEqual(sessionToken);
         });
 
-        it('should redirect to the content page', () => {
+        it('the browser opens the content page', () => {
             expect(window.location.assign).toHaveBeenCalledTimes(1);
             expect(window.location.assign).toHaveBeenCalledWith('/content');
         });
@@ -65,15 +65,15 @@ describe('when the user is logged out', () => {
             await (store.dispatch['user'] as Dispatch).login();
         });
 
-        it('sends the wrong credentials to the backend', () => {
+        it('the wrong credentials are sent to the backend', () => {
             expect(axios.post).toHaveBeenCalledWith('/api/users/login', { email, password });
         });
 
-        it('should report an error', () => {
+        it('an error message is stored in the state ', () => {
             expect((store.getState().user as State).loginPage.errorMessage).toEqual('Access Denied');
         });
 
-        it('should not have any sesstionToken stored in the localStorage', () => {
+        it('there is no sesstionToken stored in the localStorage', () => {
             expect(window.localStorage.getItem('sessionToken')).toBeNull();
         });
     });
@@ -95,7 +95,7 @@ describe('when the user is logged in', () => {
         store = init({ models: { user } });
     });
 
-    it('should have the sesstionToken in the state', () => {
+    it('the sesstionToken in present in the state', () => {
         expect((store.getState().user as State).sessionToken).toEqual(sessionToken);
     });
 });
