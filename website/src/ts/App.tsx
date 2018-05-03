@@ -5,12 +5,12 @@ import Routes from 'react-static-routes';
 import { SiteData } from './common/Types';
 
 const App = withSiteData((props: SiteData) => (
-	<div className="container mx-auto bg-white rounded overflow-hidden shadow-md">
-		<div className="bg-black text-white p-4"><h2>{props.title}</h2></div>
+	<div>
+		<h2>{props.title}</h2>
 		<Router>
 			<div>
-				<div className="content">
-					<div className="bg-grey-light p-3">
+				<div>
+					<div>
 						<Link to="/">Home</Link> / <Link to="/about">About</Link> / <Link to="/blog">Blog</Link>
 					</div>
 					<div className="p-3">

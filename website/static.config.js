@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export default {
 	getSiteData: () => ({
-		title: 'Diskette',
+		title: 'Diskette Frontend',
 	}),
 	getRoutes: async () => {
 		const {
