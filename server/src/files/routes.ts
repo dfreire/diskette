@@ -63,7 +63,7 @@ router.post('/*', authenticate, upload.array('files'), async (req, res) => {
 		await fs.move(file.path, path.join(config.DK_CONTENT_DIR, pathname, `${name}.${ext}`))
 	}
 
-	res.send();
+	res.sendStatus(200);
 });
 
 export default router;

@@ -20,11 +20,11 @@ router.post('/login', async (req, res) => {
             const sessionToken = jwtSign(session, config.DK_JWT_SECRET, '1h');
             res.send(sessionToken);
         } else {
-            return res.send(401);
+            return res.sendStatus(401);
         }
     } catch (err) {
         console.error(err);
-        res.send(500);
+        res.sendStatus(500);
     }
 });
 
