@@ -7,33 +7,32 @@ import PasswordField from '../components/PasswordField';
 interface Props extends UserModel.State, UserModel.Dispatch {
 }
 
-const Login = (props: Props) => (
-    <div className={classes.container}>
-        <form>
-            <EmailField
-                label="Email"
-                value={props.loginPage.email}
-                onChange={value => props.onLoginPageChangeField({ key: 'email', value })}
-            />
-            <PasswordField
-                label="Password"
-                value={props.loginPage.password}
-                onChange={value => props.onLoginPageChangeField({ key: 'password', value })}
-            />
-            <div className={classes.group}>
-                <button
-                    className={classes.button}
-                    onClick={(evt) => {
-                        evt.preventDefault();
-                        props.login();
-                    }}
-                >
-                    Login
-                </button>
-            </div>
-        </form>
-    </div>
-);
+const Login = (props: Props) => {
+    const onClickedLogin = (evt: any) => {
+        evt.preventDefault();
+        props.login();
+    }
+    
+    return (
+        <div className={classes.container}>
+            <form>
+                <EmailField
+                    label="Email"
+                    value={props.loginPage.email}
+                    onChange={value => props.onLoginPageChangeField({ key: 'email', value })}
+                />
+                <PasswordField
+                    label="Password"
+                    value={props.loginPage.password}
+                    onChange={value => props.onLoginPageChangeField({ key: 'password', value })}
+                />
+                <div className={classes.group}>
+                    <button className={classes.button} onClick={onClickedLogin}>Login</button>
+                </div>
+            </form>
+        </div>
+    );
+}
 
 const classes = {
     container: 'p-4',

@@ -17,7 +17,7 @@ router.post('/login', async (req, res) => {
             const session: Session = {
                 id: encrypt(sha1(email), config.DK_ENCRYPTION_KEY),
             };
-            const sessionToken = jwtSign(session, config.DK_JWT_SECRET, '1h');
+            const sessionToken = jwtSign(session, config.DK_JWT_SECRET, '4h');
             res.send(sessionToken);
         } else {
             return res.sendStatus(401);
