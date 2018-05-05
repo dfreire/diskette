@@ -12,7 +12,7 @@ const Login = (props: Props) => {
         evt.preventDefault();
         props.login();
     }
-    
+
     return (
         <div className={classes.container}>
             <form>
@@ -37,7 +37,7 @@ const Login = (props: Props) => {
 const classes = {
     container: 'p-4',
     buttonContainer: "w-full py-2",
-    button: "block w-full p-3 mt-4 font-sans rounded bg-green text-white hover:bg-green-light hover:text-white "
+    button: "block w-full p-3 mt-4 font-sans rounded bg-green text-white hover:bg-green-light"
 }
 
 const mapState = (models: { user: UserModel.State }) => ({
