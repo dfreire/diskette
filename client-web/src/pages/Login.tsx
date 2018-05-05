@@ -26,7 +26,7 @@ const Login = (props: Props) => {
                     value={props.loginPage.password}
                     onChange={value => props.onLoginPageChangeField({ key: 'password', value })}
                 />
-                <div className={classes.group}>
+                <div className={classes.buttonContainer}>
                     <button className={classes.button} onClick={onClickedLogin}>Login</button>
                 </div>
             </form>
@@ -36,9 +36,7 @@ const Login = (props: Props) => {
 
 const classes = {
     container: 'p-4',
-    group: "w-full py-2",
-    label: "block pb-2 text-grey-darkest font-medium",
-    input: "block p-2 w-full border rounded",
+    buttonContainer: "w-full py-2",
     button: "block w-full p-3 mt-4 font-sans rounded bg-green text-white hover:bg-green-light hover:text-white "
 }
 
