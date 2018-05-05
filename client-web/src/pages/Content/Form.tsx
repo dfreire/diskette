@@ -13,6 +13,7 @@ interface Props extends ContentModel.State, ContentModel.Dispatch {
 }
 
 const Form = (props: Props) => {
+    const { pathname } = props.location;
     return (
         <div>
             <Tabs titles={props.contentPage.contentType.tabs.map(tab => tab.title)}>
@@ -21,8 +22,8 @@ const Form = (props: Props) => {
                 ))}
             </Tabs>
             <div className={classes.buttonsContainer}>
-                <button className={classes.cancelButton}>Cancel</button>
-                <button className={classes.saveButton}>Save</button>
+                <button className={classes.saveButton} onClick={props.onSave}>Save</button>
+                <button className={classes.cancelButton} onClick={() => props.onLoad({ pathname })}>Cancel</button>
             </div>
         </div>
     );
@@ -110,6 +111,8 @@ const mapState = (models: { content: ContentModel.State }) => ({
 
 const mapDispatch = (models: { content: ContentModel.Dispatch }) => ({
     onContentFieldChange: models.content.onContentFieldChange,
+    onSave: models.content.onSave,
+    onLoad: models.content.onLoad,
 }) as any;
 
 export default connect(mapState, mapDispatch)(Form);

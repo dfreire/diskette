@@ -18,6 +18,9 @@ export interface Dispatch {
     onLoaded: { (payload: { content: Types.Content, contentType: Types.ContentType }): void };
 
     onContentFieldChange: { (payload: { key: string; value: any }): void };
+
+    onSave: { (): void };
+    onCancel: { (): void };
 };
 
 const INITIAL_STATE: State = {
