@@ -22,7 +22,7 @@ const Form = (props: Props) => {
                 ))}
             </Tabs>
             <div className={classes.buttonsContainer}>
-                <button className={classes.saveButton} onClick={props.onSave}>Save</button>
+                <button className={classes.saveButton} onClick={() => props.onSave({ pathname })}>Save</button>
                 <button className={classes.cancelButton} onClick={() => props.onLoad({ pathname })}>Cancel</button>
             </div>
         </div>

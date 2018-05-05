@@ -19,8 +19,7 @@ export interface Dispatch {
 
     onContentFieldChange: { (payload: { key: string; value: any }): void };
 
-    onSave: { (): void };
-    onCancel: { (): void };
+    onSave: { (payload: { pathname: string }): void };
 };
 
 const INITIAL_STATE: State = {
@@ -74,6 +73,18 @@ const effects = {
             logoutIf401(err);
         }
     },
+
+    async onSave(payload: { pathname: string }, rootState: { content: State, user: UserModel.State }) {
+        try {
+            const { pathname } = payload;
+            const { content } = rootState.content.contentPage;
+            const res = await axios.post(`/api${pathname}`, content);
+            console.log('res', res);
+        } catch (err) {
+            console.error(err);
+            logoutIf401(err);
+        }
+    }
 };
 
 export const content = {

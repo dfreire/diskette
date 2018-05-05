@@ -21,7 +21,7 @@ router.get('/*', authenticate, async (req, res) => {
 router.post('/*', authenticate, async (req, res) => {
     try {
         const location = req.params[0];
-        const { content } = req.body;
+        const content = req.body;
         await model.createOrUpdate(location, content);
         res.sendStatus(200);
     } catch (err) {
