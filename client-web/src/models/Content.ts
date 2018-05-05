@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as UserModel from './User';
 import * as Types from './Types';
-import { logoutIf401 } from './util';
+import { logoutIf401, as } from './util';
 
 export interface State {
     contentPage: {
@@ -71,17 +71,13 @@ const effects = {
 
             const contentType = res2.data;
 
-            dispath(this).onLoaded({ content, contentType });
+            as<Dispatch>(this).onLoaded({ content, contentType });
         } catch (err) {
             console.error(err);
             logoutIf401(err);
         }
     },
 };
-
-function dispath(that: any) {
-    return (that as any) as Dispatch;
-}
 
 export const content = {
     state: { ...INITIAL_STATE },
