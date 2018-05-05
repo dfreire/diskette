@@ -31,7 +31,7 @@ const Form = (props: Props) => {
 const classes = {
     buttonsContainer: "m-6 text-center",
     saveButton: "inline-block w-32 p-3 m-2 font-sans rounded text-white bg-green hover:bg-green-light",
-    cancelButton: "inline-block w-32 p-3 m-2 font-sans rounded text-grey-dark bg-grey-lighter hover:bg-grey-darkest hover:text-white"
+    cancelButton: "inline-block w-32 p-3 m-2 font-sans rounded text-grey-dark bg-grey-lighter hover:bg-grey-dark hover:text-white"
 };
 
 interface TabProps extends Props {

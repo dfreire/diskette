@@ -59,16 +59,10 @@ const effects = {
     async onLoad(payload: { pathname: string }, rootState: { content: State, user: UserModel.State }) {
         try {
             const { pathname } = payload;
-            const res1 = await axios.get(`/api${pathname}`, {
-                headers: { Authorization: `Bearer ${rootState.user.sessionToken}` },
-            });
-
+            const res1 = await axios.get(`/api${pathname}`);
             const content = res1.data;
 
-            const res2 = await axios.get(`/api/types/${content.type}`, {
-                headers: { Authorization: `Bearer ${rootState.user.sessionToken}` },
-            });
-
+            const res2 = await axios.get(`/api/types/${content.type}`);
             const contentType = res2.data;
 
             as<Dispatch>(this).onLoaded({ content, contentType });

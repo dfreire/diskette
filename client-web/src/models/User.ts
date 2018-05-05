@@ -2,6 +2,9 @@ import { AxiosStatic } from 'axios';
 const axios: AxiosStatic = require('axios'); // used require because it has a mock in 'src/__mocks__'
 import { logout, as } from './util';
 
+const sessionToken = localStorage.getItem('sessionToken') || '';
+axios.defaults.headers.common['Authorization'] = `Bearer ${sessionToken}`;
+
 export interface State {
     sessionToken: string;
 
@@ -22,7 +25,7 @@ export interface Dispatch {
 };
 
 export const INITIAL_STATE: State = {
-    sessionToken: localStorage.getItem('sessionToken') || '',
+    sessionToken,
 
     loginPage: {
         email: '',
