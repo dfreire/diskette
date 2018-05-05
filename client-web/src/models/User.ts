@@ -1,6 +1,6 @@
 import { AxiosStatic } from 'axios';
 const axios: AxiosStatic = require('axios'); // used require because it has a mock in 'src/__mocks__'
-import { logout } from './util';
+import { logout, as } from './util';
 
 export interface State {
     sessionToken: string;
@@ -59,7 +59,7 @@ const effects = {
         } catch (err) {
             // console.error(err);
             // console.log('err.response', err.response);
-            (this as any).onLoginError();
+            as<Dispatch>(this).onLoginError();
         }
     },
 
