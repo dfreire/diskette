@@ -15,7 +15,9 @@ const ImageField = (props: Props) => {
     return (
         <div className={classes.field}>
             <label className={classes.label}>{props.label}</label>
-            <img src={src} />
+            <div className={classes.imageContainer}>
+                <img src={src} />
+            </div>
         </div>
     );
 }
@@ -23,7 +25,7 @@ const ImageField = (props: Props) => {
 const classes = {
     field: "w-full py-2",
     label: "block pb-2 text-grey-darkest font-medium",
-    input: "block p-2 w-full border rounded",
+    imageContainer: "p-2 w-full border rounded",
 }
 
 export default ImageField;
