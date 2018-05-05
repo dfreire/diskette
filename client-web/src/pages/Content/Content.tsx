@@ -13,11 +13,12 @@ interface State { };
 class Content extends React.Component<Props, State> {
     render() {
         const hasType = this.props.contentPage.content.type.length > 0;
+        const hasContent = Object.keys(this.props.contentPage.content.fields).length > 0;
 
         return hasType && (
             <div className={classes.container}>
                 <div className={classes.formContainer}>
-                    <Form {...this.props} />
+                    {hasContent && <Form {...this.props} />}
                 </div>
                 <div className={classes.subDirsContainer}>
                     <SubDirs {...this.props} />

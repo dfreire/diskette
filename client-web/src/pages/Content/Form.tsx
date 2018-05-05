@@ -13,7 +13,6 @@ interface Props extends ContentModel.State, ContentModel.Dispatch {
 }
 
 const Form = (props: Props) => {
-    const hasContent = Object.keys(props.contentPage.content.fields).length > 0;
     return (
         <div>
             <Tabs titles={props.contentPage.contentType.tabs.map(tab => tab.title)}>
@@ -21,12 +20,10 @@ const Form = (props: Props) => {
                     <Tab key={tab.title} {...props} tabIndex={i} />
                 ))}
             </Tabs>
-            {hasContent &&
-                <div className={classes.buttonsContainer}>
-                    <button className={classes.cancelButton}>Cancel</button>
-                    <button className={classes.saveButton}>Save</button>
-                </div>
-            }
+            <div className={classes.buttonsContainer}>
+                <button className={classes.cancelButton}>Cancel</button>
+                <button className={classes.saveButton}>Save</button>
+            </div>
         </div>
     );
 }
