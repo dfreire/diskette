@@ -91,7 +91,7 @@ const Field = (props: FieldProps) => {
                     label={props.fieldType.label}
                     value={value}
                     pathname={props.location.pathname}
-                    onChange={(value) => onChange(value)}
+                    onUpload={(fileList) => props.upload({ pathname: props.location.pathname, fileKey: props.fieldType.key, fileList })}
                 />
             );
         default:
@@ -113,6 +113,7 @@ const mapDispatch = (models: { content: ContentModel.Dispatch }) => ({
     onContentFieldChange: models.content.onContentFieldChange,
     onSave: models.content.onSave,
     onLoad: models.content.onLoad,
+    upload: models.content.upload,
 }) as any;
 
 export default connect(mapState, mapDispatch)(Form);

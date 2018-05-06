@@ -20,6 +20,7 @@ export interface Dispatch {
     onContentFieldChange: { (payload: { key: string; value: any }): void };
 
     onSave: { (payload: { pathname: string }): void };
+    upload: { (payload: { pathname: string; fileKey: string; fileList: FileList }): void };
 };
 
 const INITIAL_STATE: State = {
@@ -84,7 +85,33 @@ const effects = {
             console.error(err);
             logoutIf401(err);
         }
-    }
+    },
+
+    async upload(payload: { pathname: string; fileKey: string; fileList: FileList }, rootState: { content: State, user: UserModel.State }) {
+        try {
+            const { pathname, fileKey, fileList } = payload;
+
+            // substitute '/content' by '/api/files' in from the beginning of the pathname
+            const url = ['/api/files', ...pathname.split('/').filter(t => t.length > 0).slice(1)].join('/');
+
+            const data = new FormData();
+            for (let i = 0; i < fileList.length; i++) {
+                const file = fileList.item(i);
+                if (file != null) {
+                    data.append('files', file);
+                }
+            }
+
+            const res = await axios.post(url, data);
+            console.log('res', res);
+            const fileName = res.data[0];
+
+            as<Dispatch>(this).onContentFieldChange({ key: fileKey, value: fileName });
+        } catch (err) {
+            console.error(err);
+            logoutIf401(err);
+        }
+    },
 };
 
 export const content = {

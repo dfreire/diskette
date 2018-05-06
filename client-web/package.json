@@ -13,6 +13,7 @@
     "react-router-dom": "^4.2.2",
     "react-scripts-ts": "2.15.1",
     "redux": "^4.0.0",
+    "slugg": "^1.2.1",
     "tailwindcss": "^0.5.2"
   },
   "scripts": {
