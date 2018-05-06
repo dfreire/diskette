@@ -54,6 +54,7 @@ router.get('/*', async (req, res) => {
 });
 
 router.post('/*', authenticate, upload.array('files'), async (req, res) => {
+	console.log('req.files', req.files);
 	const pathname = req.params[0];
 
 	for (let file of req.files as Express.Multer.File[]) {
