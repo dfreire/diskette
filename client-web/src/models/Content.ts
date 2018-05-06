@@ -101,8 +101,7 @@ const effects = {
         try {
             const { pathname } = payload;
             const { content } = rootState.content.contentPage;
-            const res = await axios.post(`/api${pathname}`, content);
-            console.log('res', res);
+            await axios.post(`/api${pathname}`, content);
         } catch (err) {
             console.error(err);
             logoutIf401(err);
