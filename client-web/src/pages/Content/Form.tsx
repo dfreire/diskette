@@ -83,15 +83,12 @@ const Field = (props: FieldProps) => {
                 />
             );
         case 'image':
-            const fieldType = props.fieldType as Types.ImageField;
-            const dimensions = { w: fieldType.width, h: fieldType.height };
-            const value = props.value + '?' + queryString.stringify(dimensions)
             return (
                 <ImageField
                     label={props.fieldType.label}
-                    value={value}
-                    pathname={props.location.pathname}
+                    value={getImgSrc(props)}
                     onUpload={(fileList) => props.upload({ pathname: props.location.pathname, fileKey: props.fieldType.key, fileList })}
+                    onRemove={() => props.onContentFieldChange({ key: props.fieldType.key, value: '' })}
                 />
             );
         default:
@@ -103,6 +100,26 @@ const Field = (props: FieldProps) => {
                 </div>
             );
     }
+}
+
+function getImgSrc(props: FieldProps) {
+    const { value, location, fieldType } = props;
+    const { pathname } = location;
+    const { width, height } = fieldType as Types.ImageField;
+
+    let imgSrc = '';
+
+    if (value != null && value.length > 0) {
+        imgSrc = [
+            '/api/files',
+            ...pathname.split('/').filter(t => t.length > 0).slice(1),
+            value,
+        ].join('/');
+
+        imgSrc += '?' + queryString.stringify({ w: width, h: height })
+    }
+
+    return imgSrc;
 }
 
 const mapState = (models: { content: ContentModel.State }) => ({

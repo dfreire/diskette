@@ -103,7 +103,6 @@ const effects = {
             }
 
             const res = await axios.post(url, data);
-            console.log('res', res);
             const fileName = res.data[0];
 
             as<Dispatch>(this).onContentFieldChange({ key: fileKey, value: fileName });

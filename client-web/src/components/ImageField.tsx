@@ -4,35 +4,29 @@ const { Icon } = require('react-fa');
 interface Props {
     label: string;
     value: string;
-    pathname: string;
     onUpload: { (fileList: FileList): void }
+    onRemove: { (): void }
 }
 
 const ImageField = (props: Props) => {
     let fileInput: HTMLInputElement | null;
 
-    const onClickedUpload = () => {
+    const onUpload = () => {
         fileInput != null && fileInput.click();
     };
-
-    const src = [
-        '/api/files',
-        ...props.pathname.split('/').filter(t => t.length > 0).slice(1),
-        props.value,
-    ].join('/');
 
     return (
         <div className={classes.field}>
             <label className={classes.label}>{props.label}</label>
             <div className={classes.imageContainer}>
-                <img src={src} />
+                <img src={props.value} />
                 <div className={classes.buttonsContainer}>
-                    <button className={classes.button} onClick={onClickedUpload}><Icon name="upload" /></button>
-                    <button className={classes.button}><Icon name="trash" /></button>
+                    <button className={classes.button} onClick={onUpload}><Icon name="upload" /></button>
+                    <button className={classes.button} onClick={props.onRemove}><Icon name="trash" /></button>
                     <input
+                        ref={(ref) => { fileInput = ref }}
                         type="file"
                         className="hidden"
-                        ref={(ref) => { fileInput = ref }}
                         onChange={(evt) => evt.target.files != null && props.onUpload(evt.target.files)}
                     />
                 </div>
