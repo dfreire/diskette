@@ -22,8 +22,8 @@ describe('when the user is logged out', () => {
             axios.post.mockImplementationOnce(() => Promise.resolve(serverResponse));
 
             const store = init({ models: { user } });
-            (store.dispatch['user'] as Dispatch).onLoginPageChangeField({ key: 'email', value: email });
-            (store.dispatch['user'] as Dispatch).onLoginPageChangeField({ key: 'password', value: password });
+            (store.dispatch['user'] as Dispatch).setValue({ key: 'email', value: email });
+            (store.dispatch['user'] as Dispatch).setValue({ key: 'password', value: password });
 
             await (store.dispatch['user'] as Dispatch).login();
         });
@@ -59,8 +59,8 @@ describe('when the user is logged out', () => {
             axios.post.mockImplementationOnce(() => Promise.reject(serverResponse));
 
             store = init({ models: { user } });
-            (store.dispatch['user'] as Dispatch).onLoginPageChangeField({ key: 'email', value: email });
-            (store.dispatch['user'] as Dispatch).onLoginPageChangeField({ key: 'password', value: password });
+            (store.dispatch['user'] as Dispatch).setValue({ key: 'email', value: email });
+            (store.dispatch['user'] as Dispatch).setValue({ key: 'password', value: password });
 
             await (store.dispatch['user'] as Dispatch).login();
         });

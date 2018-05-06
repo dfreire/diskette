@@ -12,15 +12,12 @@ export interface State {
 }
 
 export interface Dispatch {
-    onLoading: { (): void };
-
-    onLoad: { (payload: { pathname: string }): void };
+    clear: { (): void };
+    load: { (payload: { pathname: string }): void };
     onLoaded: { (payload: { content: Types.Content, contentType: Types.ContentType }): void };
-
-    onContentFieldChange: { (payload: { key: string; value: any }): void };
-
-    onSave: { (payload: { pathname: string }): void };
+    setValue: { (payload: { key: string; value: any }): void };
     upload: { (payload: { pathname: string; fileKey: string; fileList: FileList }): void };
+    save: { (payload: { pathname: string }): void };
 };
 
 const INITIAL_STATE: State = {
@@ -39,7 +36,7 @@ const INITIAL_STATE: State = {
 };
 
 const reducers = {
-    onLoading(state: State) {
+    clear(state: State) {
         const contentPage = { ...INITIAL_STATE.contentPage };
         return { ...state, contentPage };
     },
@@ -50,7 +47,7 @@ const reducers = {
         return { ...state, contentPage };
     },
 
-    onContentFieldChange(state: State, payload: { key: string; value: any }) {
+    setValue(state: State, payload: { key: string; value: any }) {
         const { key, value } = payload;
         const contentPage = { ...state.contentPage };
         contentPage.content.fields[key] = value;
@@ -59,7 +56,7 @@ const reducers = {
 };
 
 const effects = {
-    async onLoad(payload: { pathname: string }, rootState: { content: State, user: UserModel.State }) {
+    async load(payload: { pathname: string }, rootState: { content: State, user: UserModel.State }) {
         try {
             const { pathname } = payload;
             const res1 = await axios.get(`/api${pathname}`);
@@ -69,18 +66,6 @@ const effects = {
             const contentType = res2.data;
 
             as<Dispatch>(this).onLoaded({ content, contentType });
-        } catch (err) {
-            console.error(err);
-            logoutIf401(err);
-        }
-    },
-
-    async onSave(payload: { pathname: string }, rootState: { content: State, user: UserModel.State }) {
-        try {
-            const { pathname } = payload;
-            const { content } = rootState.content.contentPage;
-            const res = await axios.post(`/api${pathname}`, content);
-            console.log('res', res);
         } catch (err) {
             console.error(err);
             logoutIf401(err);
@@ -105,7 +90,19 @@ const effects = {
             const res = await axios.post(url, data);
             const fileName = res.data[0];
 
-            as<Dispatch>(this).onContentFieldChange({ key: fileKey, value: fileName });
+            as<Dispatch>(this).setValue({ key: fileKey, value: fileName });
+        } catch (err) {
+            console.error(err);
+            logoutIf401(err);
+        }
+    },
+
+    async save(payload: { pathname: string }, rootState: { content: State, user: UserModel.State }) {
+        try {
+            const { pathname } = payload;
+            const { content } = rootState.content.contentPage;
+            const res = await axios.post(`/api${pathname}`, content);
+            console.log('res', res);
         } catch (err) {
             console.error(err);
             logoutIf401(err);

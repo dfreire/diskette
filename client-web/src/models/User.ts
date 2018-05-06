@@ -16,11 +16,9 @@ export interface State {
 }
 
 export interface Dispatch {
-    onLoginPageChangeField: { (payload: { key: 'email' | 'password', value: string }): void };
-
+    setValue: { (payload: { key: 'email' | 'password', value: string }): void };
     login: { (): void };
     onLoginError: { (): void };
-
     logout: { (): void };
 };
 
@@ -35,7 +33,7 @@ export const INITIAL_STATE: State = {
 };
 
 const reducers = {
-    onLoginPageChangeField(state: State, payload: { key: 'email' | 'password', value: string }): State {
+    setValue(state: State, payload: { key: 'email' | 'password', value: string }): State {
         const { key, value } = payload;
         const loginPage = { ...state.loginPage };
         loginPage[key] = value;

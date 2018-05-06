@@ -19,12 +19,12 @@ const Login = (props: Props) => {
                 <EmailField
                     label="Email"
                     value={props.loginPage.email}
-                    onChange={value => props.onLoginPageChangeField({ key: 'email', value })}
+                    onChange={value => props.setValue({ key: 'email', value })}
                 />
                 <PasswordField
                     label="Password"
                     value={props.loginPage.password}
-                    onChange={value => props.onLoginPageChangeField({ key: 'password', value })}
+                    onChange={value => props.setValue({ key: 'password', value })}
                 />
                 <div className={classes.buttonContainer}>
                     <button className={classes.button} onClick={onClickedLogin}>Login</button>
@@ -45,7 +45,7 @@ const mapState = (models: { user: UserModel.State }) => ({
 });
 
 const mapDispatch = (models: { user: UserModel.Dispatch }) => ({
-    onLoginPageChangeField: models.user.onLoginPageChangeField,
+    setValue: models.user.setValue,
     login: models.user.login
 }) as any;
 

@@ -38,8 +38,8 @@ class Content extends React.Component<Props, State> {
     }
 
     _load(pathname: string) {
-        this.props.onLoading();
-        this.props.onLoad({ pathname });
+        this.props.clear();
+        this.props.load({ pathname });
     }
 }
 
@@ -54,8 +54,8 @@ const mapState = (models: { content: ContentModel.State }) => ({
 });
 
 const mapDispatch = (models: { content: ContentModel.Dispatch }) => ({
-    onLoading: models.content.onLoading,
-    onLoad: models.content.onLoad,
+    clear: models.content.clear,
+    load: models.content.load,
 }) as any;
 
 export default connect(mapState, mapDispatch)(Content);

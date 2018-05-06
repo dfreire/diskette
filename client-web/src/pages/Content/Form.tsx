@@ -22,8 +22,8 @@ const Form = (props: Props) => {
                 ))}
             </Tabs>
             <div className={classes.buttonsContainer}>
-                <button className={classes.saveButton} onClick={() => props.onSave({ pathname })}>Save</button>
-                <button className={classes.cancelButton} onClick={() => props.onLoad({ pathname })}>Cancel</button>
+                <button className={classes.saveButton} onClick={() => props.save({ pathname })}>Save</button>
+                <button className={classes.cancelButton} onClick={() => props.load({ pathname })}>Cancel</button>
             </div>
         </div>
     );
@@ -60,18 +60,13 @@ interface FieldProps extends Props {
 }
 
 const Field = (props: FieldProps) => {
-    const onChange = (value: any) => {
-        console.log(props.fieldType.key, value);
-        props.onContentFieldChange({ key: props.fieldType.key, value });
-    }
-
     switch (props.fieldType.type) {
         case 'text':
             return (
                 <TextField
                     label={props.fieldType.label}
                     value={props.value}
-                    onChange={(value) => onChange(value)}
+                    onChange={(value) => props.setValue({ key: props.fieldType.key, value })}
                 />
             );
         case 'textarea':
@@ -79,7 +74,7 @@ const Field = (props: FieldProps) => {
                 <TextAreaField
                     label={props.fieldType.label}
                     value={props.value}
-                    onChange={(value) => onChange(value)}
+                    onChange={(value) => props.setValue({ key: props.fieldType.key, value })}
                 />
             );
         case 'image':
@@ -88,7 +83,7 @@ const Field = (props: FieldProps) => {
                     label={props.fieldType.label}
                     value={getImgSrc(props)}
                     onUpload={(fileList) => props.upload({ pathname: props.location.pathname, fileKey: props.fieldType.key, fileList })}
-                    onRemove={() => props.onContentFieldChange({ key: props.fieldType.key, value: '' })}
+                    onRemove={() => props.setValue({ key: props.fieldType.key, value: '' })}
                 />
             );
         default:
@@ -127,9 +122,9 @@ const mapState = (models: { content: ContentModel.State }) => ({
 });
 
 const mapDispatch = (models: { content: ContentModel.Dispatch }) => ({
-    onContentFieldChange: models.content.onContentFieldChange,
-    onSave: models.content.onSave,
-    onLoad: models.content.onLoad,
+    setValue: models.content.setValue,
+    save: models.content.save,
+    load: models.content.load,
     upload: models.content.upload,
 }) as any;
 
