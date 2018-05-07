@@ -1,28 +1,64 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import * as Modal from 'react-modal';
 import * as ContentModel from '../../models/Content';
+import CreateDirModal from './CreateDirModal';
+import EditDirModal from './EditDirModal';
 const { Icon } = require('react-fa');
+
+Modal.setAppElement('#root');
 
 interface Props extends ContentModel.State, ContentModel.Dispatch {
     location: Location;
 }
 
-const SubDirs = (props: Props) => {
-    return (
-        <div className={classes.container}>
-            <div className={classes.addButtonContainer}>
-                <button className={classes.addButton}>
-                    <Icon name="plus" />
-                </button>
+interface State {
+    showCreateDirModal: boolean;
+    showEditDirModal: boolean;
+}
+
+class SubDirs extends React.Component<Props, State>{
+    state = {
+        showCreateDirModal: false,
+        showEditDirModal: false,
+    };
+
+    render() {
+        const { location, contentPage } = this.props;
+        const { showCreateDirModal, showEditDirModal } = this.state;
+
+        return (
+            <div className={classes.container}>
+                <div className={classes.addButtonContainer}>
+                    <button className={classes.addButton} onClick={(evt) => this.setState({ showCreateDirModal: true })}>
+                        <Icon name="plus" />
+                    </button>
+                </div>
+                <ul className={classes.dirList}>
+                    {contentPage.content.subDirs.map((name, i) => (
+                        <SubDir key={name} location={location} name={name} />
+                    ))}
+                </ul>
+
+                <Modal
+                    isOpen={showCreateDirModal}
+                    onRequestClose={() => this.setState({ showCreateDirModal: false })}
+                    contentLabel="Create Dir"
+                >
+                    <CreateDirModal />
+                </Modal>
+
+                <Modal
+                    isOpen={showEditDirModal}
+                    onRequestClose={() => this.setState({ showEditDirModal: false })}
+                    contentLabel="Edit Dir"
+                >
+                    <EditDirModal />
+                </Modal>
             </div>
-            <ul className={classes.dirList}>
-                {props.contentPage.content.subDirs.map((name, i) => (
-                    <SubDir key={name} location={props.location} name={name} />
-                ))}
-            </ul>
-        </div>
-    );
+        );
+    }
 }
 
 const SubDir = (props: { location: Location; name: string; }) => {
