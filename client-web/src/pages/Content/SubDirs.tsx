@@ -1,13 +1,10 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import * as Modal from 'react-modal';
 import * as ContentModel from '../../models/Content';
 import CreateDirModal from './CreateDirModal';
 import EditDirModal from './EditDirModal';
 const { Icon } = require('react-fa');
-
-Modal.setAppElement('#root');
 
 interface Props extends ContentModel.State, ContentModel.Dispatch {
     location: Location;
@@ -41,21 +38,14 @@ class SubDirs extends React.Component<Props, State>{
                     ))}
                 </ul>
 
-                <Modal
+                <CreateDirModal
                     isOpen={showCreateDirModal}
-                    onRequestClose={() => this.setState({ showCreateDirModal: false })}
-                    contentLabel="Create Dir"
-                >
-                    <CreateDirModal />
-                </Modal>
-
-                <Modal
+                    onClose={() => this.setState({ showCreateDirModal: false })}
+                />
+                <EditDirModal
                     isOpen={showEditDirModal}
-                    onRequestClose={() => this.setState({ showEditDirModal: false })}
-                    contentLabel="Edit Dir"
-                >
-                    <EditDirModal />
-                </Modal>
+                    onClose={() => this.setState({ showEditDirModal: false })}
+                />
             </div>
         );
     }
