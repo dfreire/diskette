@@ -4,7 +4,6 @@ import { State, Dispatch } from '../User';
 window.location.assign = jest.fn();
 
 describe('when the user is logged out', () => {
-
     describe('and tries to login with the right credentials', () => {
         const email = 'the_right_email';
         const password = 'the_right_password';
@@ -77,7 +76,6 @@ describe('when the user is logged out', () => {
             expect(window.localStorage.getItem('sessionToken')).toBeNull();
         });
     });
-
 });
 
 

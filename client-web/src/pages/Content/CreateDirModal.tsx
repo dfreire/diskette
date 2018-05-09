@@ -13,8 +13,8 @@ const CreateDirModal = (props: Props) => {
             onRequestClose={props.onClose}
             contentLabel="Create Dir"
             style={{ overlay: { backgroundColor: 'rgba(0, 0, 0, 0.75)', paddingTop: 100 } }}
-            className={classes.content}
-            overlayClassName={classes.overlay}
+            className={classes.modelContent}
+            overlayClassName={classes.modelOverlay}
         >
             <div className={classes.container}>
                 <h1>Create</h1>
@@ -24,8 +24,8 @@ const CreateDirModal = (props: Props) => {
 }
 
 const classes = {
-    overlay: "fixed pin",
-    content: 'bg-yellow w-64 mx-auto',
+    modelOverlay: "fixed pin",
+    modelContent: 'bg-yellow w-64 mx-auto',
     container: '',
 };
 

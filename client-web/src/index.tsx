@@ -10,9 +10,9 @@ import App from './App';
 import 'tailwindcss/dist/tailwind.min.css';
 import './index.css';
 
-const store = init({ models });
-
 Modal.setAppElement('#root');
+
+const store = init({ models });
 
 ReactDOM.render(
 	<Provider store={store}>
