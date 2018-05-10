@@ -14,8 +14,9 @@ interface Props extends ContentModel.State, ContentModel.Dispatch {
 
 const Form = (props: Props) => {
     const { pathname } = props.location;
+    const hasTabs = props.contentPage.contentType.tabs.length > 0;
 
-    return (
+    return hasTabs && (
         <div>
             <Tabs titles={props.contentPage.contentType.tabs.map(tab => tab.title)}>
                 {props.contentPage.contentType.tabs.map((tab, i) => (
@@ -129,4 +130,4 @@ const mapDispatch = (models: { content: ContentModel.Dispatch }) => ({
     upload: models.content.upload,
 }) as any;
 
-export default connect(mapState, mapDispatch)(Form);
+export default connect(mapState, mapDispatch)(Form as any);
