@@ -6,9 +6,12 @@ import TextField from '../../components/TextField';
 import ModalClasses from './ModalClasses';
 
 interface Props extends DirsModel.State, DirsModel.Dispatch {
+    location: Location;
 }
 
 const UpdateDirModal = (props: Props) => {
+    const { pathname } = props.location;
+
     return (
         <Modal
             isOpen={props.showUpdateModal}
@@ -32,7 +35,7 @@ const UpdateDirModal = (props: Props) => {
                         onChange={value => props.setModalFriendlyName({ friendlyName: value })}
                     />
                     <div className={classes.saveButtonContainer}>
-                        <button className={classes.saveButton} onClick={props.closeModals}>Save</button>
+                        <button className={classes.saveButton} onClick={() => props.update({ pathname })}>Save</button>
                     </div>
                 </div>
             </div>

@@ -12,7 +12,7 @@ interface Props extends DirsModel.State, DirsModel.Dispatch {
 
 class Dirs extends React.Component<Props, {}>{
     render() {
-        const { location, dirItems, openCreateModal, openUpdateModal } = this.props;
+        const { location, dirItems, openCreateModal, openUpdateModal, remove } = this.props;
         const { pathname } = location;
 
         return (
@@ -36,7 +36,7 @@ class Dirs extends React.Component<Props, {}>{
                                     <button className={classes.dirItemButton} onClick={() => openUpdateModal({ dirItem })}>
                                         <Icon name="cog" />
                                     </button>
-                                    <button className={classes.dirItemButton}>
+                                    <button className={classes.dirItemButton} onClick={() => remove({ pathname, dirItem })}>
                                         <Icon name="trash" />
                                     </button>
                                 </span>
@@ -97,6 +97,9 @@ const mapDispatch = (models: { dirs: DirsModel.Dispatch }) => ({
     closeModals: models.dirs.closeModals,
     setModalFriendlyName: models.dirs.setModalFriendlyName,
     setModalContentType: models.dirs.setModalContentType,
+    create: models.dirs.create,
+    update: models.dirs.update,
+    remove: models.dirs.remove,
 }) as any;
 
 export default connect(mapState, mapDispatch)(Dirs) as any;

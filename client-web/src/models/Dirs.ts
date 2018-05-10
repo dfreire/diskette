@@ -1,13 +1,15 @@
 import axios from 'axios';
 import { logoutIf401, as } from './util';
 
+type DirItem = { name: string; friendlyName: string };
+
 export interface State {
-    dirItems: { name: string; friendlyName: string }[];
+    dirItems: DirItem[];
     contentTypes: string[];
     showCreateModal: boolean;
     showUpdateModal: boolean;
     modalData: {
-        dirItem: { name: string; friendlyName: string };
+        dirItem: DirItem;
         contentType: string;
     };
 }
@@ -16,14 +18,14 @@ export interface Dispatch {
     clear: { (): void };
     onLoaded: { (payload: { dirNames: string[], contentTypes: string[] }): void };
     openCreateModal: { (): void };
-    openUpdateModal: { (payload: { dirItem: { name: string; friendlyName: string } }): void };
+    openUpdateModal: { (payload: { dirItem: DirItem }): void };
     closeModals: { (): void };
     setModalFriendlyName: { (payload: { friendlyName: string }): void };
     setModalContentType: { (payload: { contentType: string }): void };
     load: { (payload: { pathname: string }): void };
     create: { (payload: { pathname: string }): void };
     update: { (payload: { pathname: string }): void };
-    remove: { (payload: { pathname: string }): void };
+    remove: { (payload: { pathname: string, dirItem: DirItem }): void };
 };
 
 function getInitialState(): State {
@@ -56,7 +58,7 @@ const reducers = {
         return { ...state, showCreateModal: true, showUpdateModal: false, modalData };
     },
 
-    openUpdateModal(state: State, payload: { dirItem: { name: string; friendlyName: string } }): State {
+    openUpdateModal(state: State, payload: { dirItem: DirItem }): State {
         const { dirItem } = payload;
         const modalData = { dirItem, contentType: '' };
         return { ...state, showCreateModal: false, showUpdateModal: true, modalData };
@@ -95,6 +97,38 @@ const effects = {
             const contentTypes = res2.data;
 
             as<Dispatch>(this).onLoaded({ dirNames, contentTypes });
+        } catch (err) {
+            console.error(err);
+            logoutIf401(err);
+        }
+    },
+
+    async create(payload: { pathname: string }, rootState: { dirs: State }) {
+        try {
+            const { modalData } = rootState.dirs;
+            const { pathname } = payload;
+            console.log('create', { pathname, modalData });
+        } catch (err) {
+            console.error(err);
+            logoutIf401(err);
+        }
+    },
+
+    async update(payload: { pathname: string }, rootState: { dirs: State }) {
+        try {
+            const { modalData } = rootState.dirs;
+            const { pathname } = payload;
+            console.log('update', { pathname, modalData });
+        } catch (err) {
+            console.error(err);
+            logoutIf401(err);
+        }
+    },
+
+    async remove(payload: { pathname: string, dirItem: DirItem }, rootState: { dirs: State }) {
+        try {
+            const { pathname, dirItem } = payload;
+            console.log('remove', { pathname, dirItem });
         } catch (err) {
             console.error(err);
             logoutIf401(err);
