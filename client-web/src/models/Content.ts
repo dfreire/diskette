@@ -24,6 +24,8 @@ export interface Dispatch {
     save: { (payload: { pathname: string }): void };
 
     setDirValue: { (payload: { key: string; value: any }): void };
+    onClickedCreateDir: { (payload: { pathname: string }): void };
+    onClickedUpdateDir: { (payload: { pathname: string }): void };
 };
 
 function getInitialState(): State {
@@ -124,6 +126,18 @@ const effects = {
             console.error(err);
             logoutIf401(err);
         }
+    },
+
+    async onClickedCreateDir(payload: { pathname: string }, rootState: { content: State, user: UserModel.State }) {
+        const { pathname } = payload;
+        const { dirModal } = rootState.content;
+        console.log('onClicked CreateDir', pathname, dirModal);
+    },
+
+    async onClickedUpdateDir(payload: { pathname: string }, rootState: { content: State, user: UserModel.State }) {
+        const { pathname } = payload;
+        const { dirModal } = rootState.content;
+        console.log('onClicked UpdateDir', pathname, dirModal);
     },
 };
 

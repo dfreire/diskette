@@ -2,8 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as ContentModel from '../../models/Content';
-import CreateDirModal from './CreateDirModal';
-import EditDirModal from './EditDirModal';
+import SubDirModal from './SubDirModal';
 const { Icon } = require('react-fa');
 
 interface Props extends ContentModel.State, ContentModel.Dispatch {
@@ -11,61 +10,75 @@ interface Props extends ContentModel.State, ContentModel.Dispatch {
 }
 
 interface State {
-    showCreateDirModal: boolean;
-    showEditDirModal: boolean;
+    showCreateModal: boolean;
+    showUpdateModal: boolean;
 }
 
 class SubDirs extends React.Component<Props, State>{
     state = {
-        showCreateDirModal: false,
-        showEditDirModal: false,
+        showCreateModal: false,
+        showUpdateModal: false,
     };
 
     render() {
-        const { location, contentPage, dirModal, setDirValue } = this.props;
-        const { showCreateDirModal, showEditDirModal } = this.state;
+        const { location, contentPage, dirModal, setDirValue, onClickedCreateDir, onClickedUpdateDir } = this.props;
+        const { showCreateModal, showUpdateModal } = this.state;
+        const { pathname } = location;
 
         return (
             <div className={classes.container}>
                 <div className={classes.addButtonContainer}>
-                    <button className={classes.addButton} onClick={(evt) => this.setState({ showCreateDirModal: true })}>
+                    <button
+                        className={classes.addButton}
+                        onClick={(evt) => this.setState({ showCreateModal: true })}
+                    >
                         <Icon name="plus" />
                     </button>
                 </div>
                 <ul className={classes.dirList}>
-                    {contentPage.content.subDirs.map((name, i) => (
-                        <SubDir key={name} location={location} name={name} />
-                    ))}
+                    {contentPage.content.subDirs.map((name, i) => {
+                        const to = [pathname, name].join('/');
+
+                        return (
+                            <li key={name} className={classes.dirItem}>
+                                <Link to={to} className={classes.dirItemLink} title={name}>{name}</Link>
+                                <span className={classes.dirItemButtons}>
+                                    <button
+                                        className={classes.dirItemButton}
+                                        onClick={(evt) => this.setState({ showUpdateModal: true })}
+                                    >
+                                        <Icon name="cog" />
+                                    </button>
+                                    <button className={classes.dirItemButton}>
+                                        <Icon name="trash" />
+                                    </button>
+                                </span>
+                            </li>
+                        );
+                    })}
                 </ul>
 
-                <CreateDirModal
-                    isOpen={showCreateDirModal}
-                    onClose={() => this.setState({ showCreateDirModal: false })}
+                <SubDirModal
+                    isNewDir={true}
+                    isOpen={showCreateModal}
+                    onClose={() => this.setState({ showCreateModal: false })}
                     name={dirModal.name}
                     type={dirModal.type}
                     setValue={setDirValue}
+                    onClickedSave={() => onClickedCreateDir({ pathname })}
                 />
-                <EditDirModal
-                    isOpen={showEditDirModal}
-                    onClose={() => this.setState({ showEditDirModal: false })}
+                <SubDirModal
+                    isNewDir={false}
+                    isOpen={showUpdateModal}
+                    onClose={() => this.setState({ showUpdateModal: false })}
+                    name={dirModal.name}
+                    type={dirModal.type}
+                    setValue={setDirValue}
+                    onClickedSave={() => onClickedUpdateDir({ pathname })}
                 />
             </div>
         );
     }
-}
-
-const SubDir = (props: { location: Location; name: string; }) => {
-    const to = [props.location.pathname, props.name].join('/');
-
-    return (
-        <li className={classes.dirItem}>
-            <Link to={to} className={classes.dirItemLink} title={props.name}>{props.name}</Link>
-            <span className={classes.dirItemButtons}>
-                <button className={classes.dirItemButton}><Icon name="cog" /></button>
-                <button className={classes.dirItemButton}><Icon name="trash" /></button>
-            </span>
-        </li>
-    );
 }
 
 const classes = {
@@ -89,6 +102,8 @@ const mapState = (models: { content: ContentModel.State }) => ({
 
 const mapDispatch = (models: { content: ContentModel.Dispatch }) => ({
     setDirValue: models.content.setDirValue,
+    onClickedCreateDir: models.content.onClickedCreateDir,
+    onClickedUpdateDir: models.content.onClickedUpdateDir,
 }) as any;
 
 export default connect(mapState, mapDispatch)(SubDirs);

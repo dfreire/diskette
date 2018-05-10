@@ -3,14 +3,16 @@ import * as Modal from 'react-modal';
 import TextField from '../../components/TextField';
 
 interface Props {
+    isNewDir: boolean;
     isOpen: boolean;
     onClose: { (): void };
     name: string;
     type: string;
     setValue: { (payload: { key: string; value: any }): void };
+    onClickedSave: { (): void };
 }
 
-const CreateDirModal = (props: Props) => {
+const SubDirModal = (props: Props) => {
     return (
         <Modal
             isOpen={props.isOpen}
@@ -27,19 +29,24 @@ const CreateDirModal = (props: Props) => {
                     onChange={(value) => props.setValue({ key: 'name', value })}
                 />
                 <TextField
-                    label="Tipo"
+                    label="Type"
                     value={props.type}
                     onChange={(value) => props.setValue({ key: 'type', value })}
                 />
+                <div className={classes.buttonContainer}>
+                    <button className={classes.button} onClick={props.onClickedSave}>Save</button>
+                </div>
             </div>
         </Modal>
     );
 }
 
 const classes = {
-    modelOverlay: "fixed pin",
-    modelContent: 'container max-w-xs mx-auto bg-white p-4',
-    container: '',
+    modelOverlay: 'fixed pin',
+    modelContent: 'container max-w-xs mx-auto bg-white',
+    container: 'p-8',
+    buttonContainer: 'w-full py-2',
+    button: 'block w-full p-3 mt-4 font-sans rounded bg-green text-white hover:bg-green-light',
 };
 
-export default CreateDirModal;
+export default SubDirModal;
