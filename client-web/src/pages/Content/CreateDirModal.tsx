@@ -3,6 +3,7 @@ import * as Modal from 'react-modal';
 const { Icon } = require('react-fa');
 import * as DirsModel from '../../models/Dirs';
 import TextField from '../../components/TextField';
+import SelectField from '../../components/SelectField';
 import ModalClasses from './ModalClasses';
 
 interface Props extends DirsModel.State, DirsModel.Dispatch {
@@ -11,7 +12,10 @@ interface Props extends DirsModel.State, DirsModel.Dispatch {
 
 const CreateDirModal = (props: Props) => {
     const { pathname } = props.location;
-    
+
+    const typesMap = {};
+    props.contentTypes.forEach(t => typesMap[t] = t);
+
     return (
         <Modal
             isOpen={props.showCreateModal}
@@ -34,9 +38,10 @@ const CreateDirModal = (props: Props) => {
                         value={props.modalData.dirItem.friendlyName}
                         onChange={value => props.setModalFriendlyName({ friendlyName: value })}
                     />
-                    <TextField
+                    <SelectField
                         label="Type"
                         value={props.modalData.contentType}
+                        valueMap={typesMap}
                         onChange={value => props.setModalContentType({ contentType: value })}
                     />
                     <div className={classes.saveButtonContainer}>

@@ -47,9 +47,9 @@ const reducers = {
     },
 
     onLoaded(state: State, payload: { dirNames: string[], contentTypes: string[] }): State {
-        const { dirNames } = payload;
+        const { dirNames, contentTypes } = payload;
         const dirItems = dirNames.map(name => ({ name, friendlyName: name.split('-').slice(1).join('-') }));
-        return { ...getInitialState(), dirItems };
+        return { ...getInitialState(), dirItems, contentTypes };
     },
 
     openCreateModal(state: State): State {
@@ -105,9 +105,16 @@ const effects = {
 
     async create(payload: { pathname: string }, rootState: { dirs: State }) {
         try {
-            const { modalData } = rootState.dirs;
             const { pathname } = payload;
-            console.log('create', { pathname, modalData });
+            const { modalData } = rootState.dirs;
+            const { friendlyName } = modalData.dirItem;
+            const { contentType } = modalData;
+
+            // substitute '/content' by '/api/dirs' in from the beginning of the pathname
+            const url = ['/api/dirs', ...pathname.split('/').filter(t => t.length > 0).slice(1)].join('/');
+            await axios.post(url, { friendlyName, contentType });
+
+            as<Dispatch>(this).load({ pathname });
         } catch (err) {
             console.error(err);
             logoutIf401(err);
@@ -119,6 +126,8 @@ const effects = {
             const { modalData } = rootState.dirs;
             const { pathname } = payload;
             console.log('update', { pathname, modalData });
+
+            as<Dispatch>(this).load({ pathname });
         } catch (err) {
             console.error(err);
             logoutIf401(err);
@@ -129,6 +138,8 @@ const effects = {
         try {
             const { pathname, dirItem } = payload;
             console.log('remove', { pathname, dirItem });
+
+            as<Dispatch>(this).load({ pathname });
         } catch (err) {
             console.error(err);
             logoutIf401(err);

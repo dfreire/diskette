@@ -9,8 +9,8 @@ const router = Router();
 router.get('/*', authenticate, async (req, res) => {
     try {
         const location = req.params[0];
-        const content = await model.list(location);
-        res.json(content);
+        const list = await model.list(location);
+        res.json(list);
     } catch (err) {
         console.error(err);
         res.sendStatus(500);
@@ -20,8 +20,8 @@ router.get('/*', authenticate, async (req, res) => {
 router.post('/*', authenticate, async (req, res) => {
     try {
         const location = req.params[0];
-        const name = req.body;
-        await model.create(location, name);
+        const { friendlyName, contentType } = req.body;
+        await model.create(location, friendlyName, contentType);
         res.sendStatus(200);
     } catch (err) {
         console.error(err);
@@ -32,8 +32,8 @@ router.post('/*', authenticate, async (req, res) => {
 router.put('/*', authenticate, async (req, res) => {
     try {
         const location = req.params[0];
-        const names = req.body;
-        await model.update(location, names);
+        const changes = req.body;
+        await model.update(location, changes);
         res.sendStatus(200);
     } catch (err) {
         console.error(err);

@@ -3,6 +3,8 @@ import * as fs from 'fs-extra';
 import { encrypt, hashPass, sha1 } from 'crypto-buddy';
 import config from '../common/config';
 import { readJson, outputJson } from '../common/io';
+import * as slug from 'slugg';
+import { save } from '../content/model';
 
 fs.mkdirpSync(config.DK_CONTENT_DIR);
 
@@ -24,15 +26,18 @@ export async function list(location: string): Promise<string[]> {
     return list;
 }
 
-export async function create(location: string, name: string) {
+export async function create(location: string, friendlyName: string, contentType: string) {
+    const dirs = await list(location);
+    const name = slug(`${dirs.length}_${friendlyName}`);
     await fs.mkdirp(path.join(config.DK_CONTENT_DIR, location, name));
+    await save(path.join(location, name), { type: contentType, fields: {} });
 }
 
-export async function update(location: string, names: { from: string, to: string }[]) {
-    for (let n of names) {
+export async function update(location: string, changes: { oldFriendlyName: string, newFriendlyName: string }[]) {
+    for (let n of changes) {
         await fs.move(
-            path.join(config.DK_CONTENT_DIR, location, n.from),
-            path.join(config.DK_CONTENT_DIR, location, n.to),
+            path.join(config.DK_CONTENT_DIR, location, n.oldFriendlyName),
+            path.join(config.DK_CONTENT_DIR, location, n.newFriendlyName),
         );
     }
 }

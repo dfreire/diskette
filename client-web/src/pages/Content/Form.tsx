@@ -14,6 +14,7 @@ interface Props extends ContentModel.State, ContentModel.Dispatch {
 
 const Form = (props: Props) => {
     const { pathname } = props.location;
+
     return (
         <div>
             <Tabs titles={props.contentPage.contentType.tabs.map(tab => tab.title)}>
@@ -65,7 +66,7 @@ const Field = (props: FieldProps) => {
             return (
                 <TextField
                     label={props.fieldType.label}
-                    value={props.value}
+                    value={props.value || ''}
                     onChange={(value) => props.setValue({ key: props.fieldType.key, value })}
                 />
             );
@@ -73,7 +74,7 @@ const Field = (props: FieldProps) => {
             return (
                 <TextAreaField
                     label={props.fieldType.label}
-                    value={props.value}
+                    value={props.value || ''}
                     onChange={(value) => props.setValue({ key: props.fieldType.key, value })}
                 />
             );

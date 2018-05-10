@@ -7,6 +7,8 @@ import { readJson, outputJson } from '../common/io';
 fs.mkdirpSync(config.DK_CONTENT_DIR);
 
 export interface Content {
+    type: string;
+    fields: object;
 }
 
 export async function createOrUpdate(location: string, content: Content) {
@@ -23,7 +25,7 @@ export async function getByLocation(location: string): Promise<Content> {
     return content;
 }
 
-async function save(location: string, content: Content) {
+export async function save(location: string, content: Content) {
     const dir = path.join(config.DK_CONTENT_DIR, location);
     await fs.mkdirp(dir);
 

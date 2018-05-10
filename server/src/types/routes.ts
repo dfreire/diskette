@@ -26,27 +26,4 @@ router.get('/:id', authenticate, async (req, res) => {
     }
 });
 
-router.post('/:id', authenticate, async (req, res) => {
-    try {
-        const id = req.params.id;
-        const { contentType } = req.body;
-        await model.createOrUpdate(id, contentType);
-        res.sendStatus(200);
-    } catch (err) {
-        console.error(err);
-        res.sendStatus(500);
-    }
-});
-
-router.delete('/', authenticate, async (req, res) => {
-    try {
-        const id = req.params.id;
-        await model.remove(id);
-        res.sendStatus(200);
-    } catch (err) {
-        console.error(err);
-        res.sendStatus(500);
-    }
-});
-
 export default router;
