@@ -1,28 +1,17 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import * as ContentModel from '../../models/Content';
+import * as DirsModel from '../../models/Dirs';
 import SubDirModal from './SubDirModal';
 const { Icon } = require('react-fa');
 
-interface Props extends ContentModel.State, ContentModel.Dispatch {
+interface Props extends DirsModel.State, DirsModel.Dispatch {
     location: Location;
 }
 
-interface State {
-    showCreateModal: boolean;
-    showUpdateModal: boolean;
-}
-
-class SubDirs extends React.Component<Props, State>{
-    state = {
-        showCreateModal: false,
-        showUpdateModal: false,
-    };
-
+class SubDirs extends React.Component<Props, {}>{
     render() {
-        const { location, contentPage, dirModal, setDirValue, onClickedCreateDir, onClickedUpdateDir } = this.props;
-        const { showCreateModal, showUpdateModal } = this.state;
+        const { location, dirItems, name, type, createDirModal, updateDirModal, setValue, setModalVisibility } = this.props;
         const { pathname } = location;
 
         return (
@@ -30,22 +19,22 @@ class SubDirs extends React.Component<Props, State>{
                 <div className={classes.addButtonContainer}>
                     <button
                         className={classes.addButton}
-                        onClick={(evt) => this.setState({ showCreateModal: true })}
+                        onClick={() => setModalVisibility({ key: 'createDirModal', visible: true })}
                     >
                         <Icon name="plus" />
                     </button>
                 </div>
                 <ul className={classes.dirList}>
-                    {contentPage.content.subDirs.map((name, i) => {
-                        const to = [pathname, name].join('/');
+                    {dirItems.map((dirItem, i) => {
+                        const to = [pathname, dirItem.name].join('/');
 
                         return (
-                            <li key={name} className={classes.dirItem}>
-                                <Link to={to} className={classes.dirItemLink} title={name}>{name}</Link>
+                            <li key={dirItem.name} className={classes.dirItem}>
+                                <Link to={to} className={classes.dirItemLink}>{dirItem.friendlyName}</Link>
                                 <span className={classes.dirItemButtons}>
                                     <button
                                         className={classes.dirItemButton}
-                                        onClick={(evt) => this.setState({ showUpdateModal: true })}
+                                        onClick={() => setModalVisibility({ key: 'updateDirModal', visible: true })}
                                     >
                                         <Icon name="cog" />
                                     </button>
@@ -60,24 +49,39 @@ class SubDirs extends React.Component<Props, State>{
 
                 <SubDirModal
                     isNewDir={true}
-                    isOpen={showCreateModal}
-                    onClose={() => this.setState({ showCreateModal: false })}
-                    name={dirModal.name}
-                    type={dirModal.type}
-                    setValue={setDirValue}
-                    onClickedSave={() => onClickedCreateDir({ pathname })}
+                    isOpen={createDirModal}
+                    onClose={() => setModalVisibility({ key: 'createDirModal', visible: false })}
+                    name={name}
+                    type={type}
+                    setValue={setValue}
+                    onClickedSave={() => setModalVisibility({ key: 'createDirModal', visible: false })}
                 />
                 <SubDirModal
                     isNewDir={false}
-                    isOpen={showUpdateModal}
-                    onClose={() => this.setState({ showUpdateModal: false })}
-                    name={dirModal.name}
-                    type={dirModal.type}
-                    setValue={setDirValue}
-                    onClickedSave={() => onClickedUpdateDir({ pathname })}
+                    isOpen={updateDirModal}
+                    onClose={() => setModalVisibility({ key: 'updateDirModal', visible: false })}
+                    name={name}
+                    type={type}
+                    setValue={setValue}
+                    onClickedSave={() => setModalVisibility({ key: 'updateDirModal', visible: false })}
                 />
             </div>
         );
+    }
+
+    componentWillMount() {
+        this._load(this.props.location.pathname);
+    }
+
+    componentWillReceiveProps(nextProps: Props) {
+        if (nextProps.location.pathname != this.props.location.pathname) {
+            this._load(nextProps.location.pathname);
+        }
+    }
+
+    _load(pathname: string) {
+        this.props.clear();
+        this.props.load({ pathname });
     }
 }
 
@@ -95,15 +99,20 @@ const classes = {
     dirItemButton: 'px-1 text-grey hover:text-black',
 };
 
-const mapState = (models: { content: ContentModel.State }) => ({
-    contentPage: models.content.contentPage,
-    dirModal: models.content.dirModal,
+const mapState = (models: { dirs: DirsModel.State }) => ({
+    dirItems: models.dirs.dirItems,
+    contentTypes: models.dirs.contentTypes,
+    name: models.dirs.name,
+    type: models.dirs.type,
+    createDirModal: models.dirs.createDirModal,
+    updateDirModal: models.dirs.updateDirModal,
 });
 
-const mapDispatch = (models: { content: ContentModel.Dispatch }) => ({
-    setDirValue: models.content.setDirValue,
-    onClickedCreateDir: models.content.onClickedCreateDir,
-    onClickedUpdateDir: models.content.onClickedUpdateDir,
+const mapDispatch = (models: { dirs: DirsModel.Dispatch }) => ({
+    clear: models.dirs.clear,
+    load: models.dirs.load,
+    setValue: models.dirs.setValue,
+    setModalVisibility: models.dirs.setModalVisibility,
 }) as any;
 
-export default connect(mapState, mapDispatch)(SubDirs);
+export default connect(mapState, mapDispatch)(SubDirs) as any;

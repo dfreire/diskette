@@ -44,7 +44,7 @@ const SubDirModal = (props: Props) => {
 const classes = {
     modelOverlay: 'fixed pin',
     modelContent: 'container max-w-xs mx-auto bg-white',
-    container: 'p-8',
+    container: 'p-6',
     buttonContainer: 'w-full py-2',
     button: 'block w-full p-3 mt-4 font-sans rounded bg-green text-white hover:bg-green-light',
 };

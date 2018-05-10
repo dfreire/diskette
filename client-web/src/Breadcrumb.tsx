@@ -17,7 +17,8 @@ const Breadcrumb = (props: Props) => {
         const token = tokens[i];
         const previous = links[i - 1];
         const to = previous.to + '/' + token;
-        const component = <Link className={classes.link} to={to}>{token}</Link>;
+        const name = token.split('-').slice(1).join('-');
+        const component = <Link className={classes.link} to={to}>{name}</Link>;
         links.push({ to, component });
     }
 

@@ -17,6 +17,18 @@ export async function remove(id: string) {
     await fs.remove(path.join(config.DK_CONTENT_TYPES_DIR, `${id}.json`));
 }
 
+export async function list(): Promise<string[]> {
+    const dir = path.join(config.DK_CONTENT_TYPES_DIR);
+
+    const list = [];
+
+    fs.readdirSync(dir).forEach(file => {
+        fs.statSync(path.join(dir, file)).isFile() && list.push(file);
+    });
+
+    return list.sort((a, b) => a.localeCompare(b));
+}
+
 export async function getById(id: string): Promise<ContentType> {
     const file = path.join(config.DK_CONTENT_TYPES_DIR, `${id}.json`);
     const contentType: ContentType = await readJson(file);

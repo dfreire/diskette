@@ -9,10 +9,6 @@ export interface State {
         contentType: Types.ContentType;
         errorMessage: string;
     };
-    dirModal: {
-        name: string;
-        type: string;
-    };
 }
 
 export interface Dispatch {
@@ -22,10 +18,6 @@ export interface Dispatch {
     setValue: { (payload: { key: string; value: any }): void };
     upload: { (payload: { pathname: string; fileKey: string; fileList: FileList }): void };
     save: { (payload: { pathname: string }): void };
-
-    setDirValue: { (payload: { key: string; value: any }): void };
-    onClickedCreateDir: { (payload: { pathname: string }): void };
-    onClickedUpdateDir: { (payload: { pathname: string }): void };
 };
 
 function getInitialState(): State {
@@ -41,10 +33,6 @@ function getInitialState(): State {
                 tabs: [],
             },
             errorMessage: '',
-        },
-        dirModal: {
-            name: '',
-            type: '',
         },
     };
 }
@@ -65,13 +53,6 @@ const reducers = {
         const contentPage = { ...state.contentPage };
         contentPage.content.fields[key] = value;
         return { ...state, contentPage };
-    },
-
-    setDirValue(state: State, payload: { key: string; value: any }) {
-        const { key, value } = payload;
-        const dirModal = { ...state.dirModal };
-        dirModal[key] = value;
-        return { ...state, dirModal };
     },
 };
 
@@ -126,18 +107,6 @@ const effects = {
             console.error(err);
             logoutIf401(err);
         }
-    },
-
-    async onClickedCreateDir(payload: { pathname: string }, rootState: { content: State, user: UserModel.State }) {
-        const { pathname } = payload;
-        const { dirModal } = rootState.content;
-        console.log('onClicked CreateDir', pathname, dirModal);
-    },
-
-    async onClickedUpdateDir(payload: { pathname: string }, rootState: { content: State, user: UserModel.State }) {
-        const { pathname } = payload;
-        const { dirModal } = rootState.content;
-        console.log('onClicked UpdateDir', pathname, dirModal);
     },
 };
 

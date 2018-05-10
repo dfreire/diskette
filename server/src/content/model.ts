@@ -7,7 +7,6 @@ import { readJson, outputJson } from '../common/io';
 fs.mkdirpSync(config.DK_CONTENT_DIR);
 
 export interface Content {
-    subDirs: string[];
 }
 
 export async function createOrUpdate(location: string, content: Content) {
@@ -21,11 +20,6 @@ export async function remove(location: string) {
 export async function getByLocation(location: string): Promise<Content> {
     const dir = path.join(config.DK_CONTENT_DIR, location);
     const content: Content = await readJson(path.join(dir, 'index.json'));
-    // content.subDirs = [];
-    // fs.readdirSync(dir).forEach(subDir => {
-    //     fs.statSync(path.join(dir, subDir)).isDirectory() && content.subDirs.push(subDir);
-    // });
-    content.subDirs = content.subDirs || [];
     return content;
 }
 
