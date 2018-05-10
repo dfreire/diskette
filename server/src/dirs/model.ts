@@ -42,6 +42,28 @@ export async function update(location: string, changes: { oldFriendlyName: strin
     }
 }
 
-export async function remove(location: string, name: string) {
-    await fs.remove(path.join(config.DK_CONTENT_DIR, location, name));
+export async function remove(location: string) {
+    const tokens = location.split('/');
+    const name = tokens.pop();
+    const n = parseInt(name.split('-')[0]);
+    const _location = tokens.join('/')
+    const dirs = await list(_location);
+
+    for (let i = 0; i < dirs.length; i++) {
+        const existentName = dirs[i];
+
+        if (i === n) {
+            await fs.remove(path.join(config.DK_CONTENT_DIR, _location, existentName));
+
+        } else if (i > n) {
+            const newNameTokens = existentName.split('-');
+            newNameTokens[0] = `${i - 1}`;
+            const newName = newNameTokens.join('-');
+
+            await fs.move(
+                path.join(config.DK_CONTENT_DIR, _location, existentName),
+                path.join(config.DK_CONTENT_DIR, _location, newName),
+            );
+        }
+    }
 }

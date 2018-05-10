@@ -10,9 +10,18 @@ interface Props extends DirsModel.State, DirsModel.Dispatch {
     location: Location;
 }
 
-class Dirs extends React.Component<Props, {}>{
+interface State {
+    deletingItemName: string;
+}
+
+class Dirs extends React.Component<Props, State>{
+    state = {
+        deletingItemName: '',
+    };
+
     render() {
         const { location, dirItems, openCreateModal, openUpdateModal, remove } = this.props;
+        const { deletingItemName } = this.state;
         const { pathname } = location;
 
         return (
@@ -30,15 +39,29 @@ class Dirs extends React.Component<Props, {}>{
                         const to = [pathname, dirItem.name].join('/');
 
                         return (
-                            <li key={dirItem.name} className={classes.dirItem}>
+                            <li key={dirItem.name} className={classes.dirItem} onMouseLeave={() => this.setState({ deletingItemName: '' })}>
                                 <Link to={to} className={classes.dirItemLink}>{dirItem.friendlyName}</Link>
                                 <span className={classes.dirItemButtons}>
-                                    <button className={classes.dirItemButton} onClick={() => openUpdateModal({ dirItem })}>
-                                        <Icon name="cog" />
-                                    </button>
-                                    <button className={classes.dirItemButton} onClick={() => remove({ pathname, dirItem })}>
-                                        <Icon name="trash" />
-                                    </button>
+                                    {deletingItemName !== dirItem.name &&
+                                        <button className={classes.dirItemButton} onClick={() => openUpdateModal({ dirItem })}>
+                                            <Icon name="cog" />
+                                        </button>
+                                    }
+                                    {deletingItemName !== dirItem.name &&
+                                        <button className={classes.dirItemButton} onClick={() => this.setState({ deletingItemName: dirItem.name })}>
+                                            <Icon name="trash" />
+                                        </button>
+                                    }
+                                    {deletingItemName === dirItem.name &&
+                                        <button className={classes.dirItemButton} onClick={() => remove({ pathname, dirItem })}>
+                                            <Icon name="check" />
+                                        </button>
+                                    }
+                                    {deletingItemName === dirItem.name &&
+                                        <button className={classes.dirItemButton} onClick={() => this.setState({ deletingItemName: '' })}>
+                                            <Icon name="ban" />
+                                        </button>
+                                    }
                                 </span>
                             </li>
                         );

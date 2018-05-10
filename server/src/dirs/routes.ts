@@ -41,11 +41,10 @@ router.put('/*', authenticate, async (req, res) => {
     }
 });
 
-router.delete('/', authenticate, async (req, res) => {
+router.delete('/*', authenticate, async (req, res) => {
     try {
         const location = req.params[0];
-        const name = req.body;
-        await model.remove(location, name);
+        await model.remove(location);
         res.sendStatus(200);
     } catch (err) {
         console.error(err);

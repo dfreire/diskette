@@ -137,7 +137,11 @@ const effects = {
     async remove(payload: { pathname: string, dirItem: DirItem }, rootState: { dirs: State }) {
         try {
             const { pathname, dirItem } = payload;
-            console.log('remove', { pathname, dirItem });
+            const name = dirItem.name;
+
+            // substitute '/content' by '/api/dirs' in from the beginning of the pathname
+            const url = ['/api/dirs', ...pathname.split('/').filter(t => t.length > 0).slice(1)].join('/');
+            await axios.delete(`${url}/${name}`);
 
             as<Dispatch>(this).load({ pathname });
         } catch (err) {
