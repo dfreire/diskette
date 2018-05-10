@@ -2,19 +2,24 @@ import axios from 'axios';
 import { logoutIf401, as } from './util';
 
 export interface State {
-    dirItems: { name: string; friendlyName: string } [];
+    dirItems: { name: string; friendlyName: string }[];
     contentTypes: string[];
-    createDirModal: boolean;
-    updateDirModal: boolean;
-    name: string;
-    type: string;
+    showCreateModal: boolean;
+    showUpdateModal: boolean;
+    modalData: {
+        dirItem: { name: string; friendlyName: string };
+        contentType: string;
+    };
 }
 
 export interface Dispatch {
     clear: { (): void };
     onLoaded: { (payload: { dirNames: string[], contentTypes: string[] }): void };
-    setModalVisibility: { (payload: { key: 'createDirModal' | 'updateDirModal', visible: boolean }): void };
-    setValue: { (payload: { key: 'name' | 'type', value: string }): void };
+    openCreateModal: { (): void };
+    openUpdateModal: { (payload: { dirItem: { name: string; friendlyName: string } }): void };
+    closeModals: { (): void };
+    setModalFriendlyName: { (payload: { friendlyName: string }): void };
+    setModalContentType: { (payload: { contentType: string }): void };
     load: { (payload: { pathname: string }): void };
     create: { (payload: { pathname: string }): void };
     update: { (payload: { pathname: string }): void };
@@ -25,10 +30,12 @@ function getInitialState(): State {
     return {
         dirItems: [],
         contentTypes: [],
-        createDirModal: false,
-        updateDirModal: false,
-        name: '',
-        type: '',
+        showCreateModal: false,
+        showUpdateModal: false,
+        modalData: {
+            dirItem: { name: '', friendlyName: '' },
+            contentType: '',
+        },
     };
 }
 
@@ -43,14 +50,34 @@ const reducers = {
         return { ...getInitialState(), dirItems };
     },
 
-    setModalVisibility(state: State, payload: { key: 'createDirModal' | 'updateDirModal', visible: boolean }): State {
-        const { key, visible } = payload;
-        return { ...state, [key]: visible };
+    openCreateModal(state: State): State {
+        const dirItem = { name: '', friendlyName: '' };
+        const modalData = { dirItem, contentType: '' };
+        return { ...state, showCreateModal: true, showUpdateModal: false, modalData };
     },
 
-    setValue(state: State, payload: { key: 'name' | 'type', value: string }): State {
-        const { key, value } = payload;
-        return { ...state, [key]: value };
+    openUpdateModal(state: State, payload: { dirItem: { name: string; friendlyName: string } }): State {
+        const { dirItem } = payload;
+        const modalData = { dirItem, contentType: '' };
+        return { ...state, showCreateModal: false, showUpdateModal: true, modalData };
+    },
+
+    closeModals(state: State): State {
+        return { ...state, showCreateModal: false, showUpdateModal: false };
+    },
+
+    setModalFriendlyName(state: State, payload: { friendlyName: string }): State {
+        const { friendlyName } = payload;
+        const modalData = { ...state.modalData };
+        modalData.dirItem.friendlyName = friendlyName;
+        return { ...state, modalData };
+    },
+
+    setModalContentType(state: State, payload: { contentType: string }): State {
+        const { contentType } = payload;
+        const modalData = { ...state.modalData };
+        modalData.contentType = contentType;
+        return { ...state, modalData };
     },
 };
 

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import * as ContentModel from '../../models/Content';
 import Form from './Form';
-import SubDirs from './SubDirs';
+import Dirs from './Dirs';
 
 interface Props extends ContentModel.State, ContentModel.Dispatch {
     location: Location;
@@ -21,7 +21,7 @@ class Content extends React.Component<Props, State> {
                     {hasContent && <Form {...this.props} />}
                 </div>
                 <div className={classes.subDirsContainer}>
-                    <SubDirs {...this.props} />
+                    <Dirs {...this.props} />
                 </div>
             </div>
         );

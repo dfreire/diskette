@@ -2,16 +2,17 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as DirsModel from '../../models/Dirs';
-import SubDirModal from './SubDirModal';
+import CreateDirModal from './CreateDirModal';
+import UpdateDirModal from './UpdateDirModal';
 const { Icon } = require('react-fa');
 
 interface Props extends DirsModel.State, DirsModel.Dispatch {
     location: Location;
 }
 
-class SubDirs extends React.Component<Props, {}>{
+class Dirs extends React.Component<Props, {}>{
     render() {
-        const { location, dirItems, name, type, createDirModal, updateDirModal, setValue, setModalVisibility } = this.props;
+        const { location, dirItems, openCreateModal, openUpdateModal } = this.props;
         const { pathname } = location;
 
         return (
@@ -19,7 +20,7 @@ class SubDirs extends React.Component<Props, {}>{
                 <div className={classes.addButtonContainer}>
                     <button
                         className={classes.addButton}
-                        onClick={() => setModalVisibility({ key: 'createDirModal', visible: true })}
+                        onClick={openCreateModal}
                     >
                         <Icon name="plus" />
                     </button>
@@ -32,10 +33,7 @@ class SubDirs extends React.Component<Props, {}>{
                             <li key={dirItem.name} className={classes.dirItem}>
                                 <Link to={to} className={classes.dirItemLink}>{dirItem.friendlyName}</Link>
                                 <span className={classes.dirItemButtons}>
-                                    <button
-                                        className={classes.dirItemButton}
-                                        onClick={() => setModalVisibility({ key: 'updateDirModal', visible: true })}
-                                    >
+                                    <button className={classes.dirItemButton} onClick={() => openUpdateModal({ dirItem })}>
                                         <Icon name="cog" />
                                     </button>
                                     <button className={classes.dirItemButton}>
@@ -47,24 +45,8 @@ class SubDirs extends React.Component<Props, {}>{
                     })}
                 </ul>
 
-                <SubDirModal
-                    isNewDir={true}
-                    isOpen={createDirModal}
-                    onClose={() => setModalVisibility({ key: 'createDirModal', visible: false })}
-                    name={name}
-                    type={type}
-                    setValue={setValue}
-                    onClickedSave={() => setModalVisibility({ key: 'createDirModal', visible: false })}
-                />
-                <SubDirModal
-                    isNewDir={false}
-                    isOpen={updateDirModal}
-                    onClose={() => setModalVisibility({ key: 'updateDirModal', visible: false })}
-                    name={name}
-                    type={type}
-                    setValue={setValue}
-                    onClickedSave={() => setModalVisibility({ key: 'updateDirModal', visible: false })}
-                />
+                <CreateDirModal {...this.props} />
+                <UpdateDirModal {...this.props} />
             </div>
         );
     }
@@ -102,17 +84,19 @@ const classes = {
 const mapState = (models: { dirs: DirsModel.State }) => ({
     dirItems: models.dirs.dirItems,
     contentTypes: models.dirs.contentTypes,
-    name: models.dirs.name,
-    type: models.dirs.type,
-    createDirModal: models.dirs.createDirModal,
-    updateDirModal: models.dirs.updateDirModal,
+    modalData: models.dirs.modalData,
+    showCreateModal: models.dirs.showCreateModal,
+    showUpdateModal: models.dirs.showUpdateModal,
 });
 
 const mapDispatch = (models: { dirs: DirsModel.Dispatch }) => ({
     clear: models.dirs.clear,
     load: models.dirs.load,
-    setValue: models.dirs.setValue,
-    setModalVisibility: models.dirs.setModalVisibility,
+    openCreateModal: models.dirs.openCreateModal,
+    openUpdateModal: models.dirs.openUpdateModal,
+    closeModals: models.dirs.closeModals,
+    setModalFriendlyName: models.dirs.setModalFriendlyName,
+    setModalContentType: models.dirs.setModalContentType,
 }) as any;
 
-export default connect(mapState, mapDispatch)(SubDirs) as any;
+export default connect(mapState, mapDispatch)(Dirs) as any;
