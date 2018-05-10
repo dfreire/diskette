@@ -1,9 +1,13 @@
 import * as React from 'react';
 import * as Modal from 'react-modal';
+import TextField from '../../components/TextField';
 
 interface Props {
     isOpen: boolean;
     onClose: { (): void };
+    name: string;
+    type: string;
+    setValue: { (payload: { key: string; value: any }): void };
 }
 
 const CreateDirModal = (props: Props) => {
@@ -17,7 +21,16 @@ const CreateDirModal = (props: Props) => {
             overlayClassName={classes.modelOverlay}
         >
             <div className={classes.container}>
-                <h1>Create</h1>
+                <TextField
+                    label="Name"
+                    value={props.name}
+                    onChange={(value) => props.setValue({ key: 'name', value })}
+                />
+                <TextField
+                    label="Tipo"
+                    value={props.type}
+                    onChange={(value) => props.setValue({ key: 'type', value })}
+                />
             </div>
         </Modal>
     );
@@ -25,7 +38,7 @@ const CreateDirModal = (props: Props) => {
 
 const classes = {
     modelOverlay: "fixed pin",
-    modelContent: 'bg-yellow w-64 mx-auto',
+    modelContent: 'container max-w-xs mx-auto bg-white p-4',
     container: '',
 };
 

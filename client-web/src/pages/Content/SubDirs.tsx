@@ -22,7 +22,7 @@ class SubDirs extends React.Component<Props, State>{
     };
 
     render() {
-        const { location, contentPage } = this.props;
+        const { location, contentPage, dirModal, setDirValue } = this.props;
         const { showCreateDirModal, showEditDirModal } = this.state;
 
         return (
@@ -41,6 +41,9 @@ class SubDirs extends React.Component<Props, State>{
                 <CreateDirModal
                     isOpen={showCreateDirModal}
                     onClose={() => this.setState({ showCreateDirModal: false })}
+                    name={dirModal.name}
+                    type={dirModal.type}
+                    setValue={setDirValue}
                 />
                 <EditDirModal
                     isOpen={showEditDirModal}
@@ -81,9 +84,11 @@ const classes = {
 
 const mapState = (models: { content: ContentModel.State }) => ({
     contentPage: models.content.contentPage,
+    dirModal: models.content.dirModal,
 });
 
 const mapDispatch = (models: { content: ContentModel.Dispatch }) => ({
+    setDirValue: models.content.setDirValue,
 }) as any;
 
 export default connect(mapState, mapDispatch)(SubDirs);

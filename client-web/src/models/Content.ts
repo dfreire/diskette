@@ -9,6 +9,10 @@ export interface State {
         contentType: Types.ContentType;
         errorMessage: string;
     };
+    dirModal: {
+        name: string;
+        type: string;
+    };
 }
 
 export interface Dispatch {
@@ -18,32 +22,39 @@ export interface Dispatch {
     setValue: { (payload: { key: string; value: any }): void };
     upload: { (payload: { pathname: string; fileKey: string; fileList: FileList }): void };
     save: { (payload: { pathname: string }): void };
+
+    setDirValue: { (payload: { key: string; value: any }): void };
 };
 
-const INITIAL_STATE: State = {
-    contentPage: {
-        content: {
+function getInitialState(): State {
+    return {
+        contentPage: {
+            content: {
+                type: '',
+                fields: {},
+                subDirs: [],
+            },
+            contentType: {
+                title: '',
+                tabs: [],
+            },
+            errorMessage: '',
+        },
+        dirModal: {
+            name: '',
             type: '',
-            fields: {},
-            subDirs: [],
         },
-        contentType: {
-            title: '',
-            tabs: [],
-        },
-        errorMessage: '',
-    },
-};
+    };
+}
 
 const reducers = {
     clear(state: State) {
-        const contentPage = { ...INITIAL_STATE.contentPage };
-        return { ...state, contentPage };
+        return getInitialState();
     },
 
     onLoaded(state: State, payload: { content: Types.Content, contentType: Types.ContentType }) {
         const { content, contentType } = payload;
-        const contentPage = { ...INITIAL_STATE.contentPage, content, contentType };
+        const contentPage = { ...getInitialState().contentPage, content, contentType };
         return { ...state, contentPage };
     },
 
@@ -52,6 +63,13 @@ const reducers = {
         const contentPage = { ...state.contentPage };
         contentPage.content.fields[key] = value;
         return { ...state, contentPage };
+    },
+
+    setDirValue(state: State, payload: { key: string; value: any }) {
+        const { key, value } = payload;
+        const dirModal = { ...state.dirModal };
+        dirModal[key] = value;
+        return { ...state, dirModal };
     },
 };
 
@@ -110,7 +128,7 @@ const effects = {
 };
 
 export const content = {
-    state: { ...INITIAL_STATE },
+    state: getInitialState(),
     reducers,
     effects
 };
