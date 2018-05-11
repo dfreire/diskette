@@ -36,8 +36,13 @@ class App extends React.Component<Props, {}> {
 	}
 
 	_renderLoggedOut() {
+		const formHeight = 322;
+		const windowHeight = window.innerHeight;
+
+		const marginTop = (windowHeight / 2) - (formHeight / 2);
+
 		return (
-			<div className={[classes.container, classes.containerLoggedOut].join(' ')}>
+			<div className={[classes.container, classes.containerLoggedOut].join(' ')} style={{ marginTop }}>
 				<div className={classes.headerContainer}>
 					<div className={classes.headerTitle}><h2>Diskette</h2></div>
 				</div>
