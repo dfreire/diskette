@@ -18,6 +18,7 @@ export interface State {
 export interface Dispatch {
     clear: { (): void };
     onLoaded: { (payload: { dirNames: string[], contentTypes: string[] }): void };
+    optimisticReorder: { (payload: { oldPos: number; newPos: number }): void };
     openCreateModal: { (): void };
     openUpdateModal: { (payload: { dirItem: DirItem }): void };
     closeModals: { (): void };
@@ -26,7 +27,7 @@ export interface Dispatch {
     load: { (payload: { pathname: string }): void };
     create: { (payload: { pathname: string }): void };
     update: { (payload: { pathname: string }): void };
-    reorder: { (payload: { pathname: string, oldName: string, newPos: number }): void };
+    reorder: { (payload: { pathname: string, oldName: string, oldPos: number, newPos: number }): void };
     remove: { (payload: { pathname: string, dirItem: DirItem }): void };
 };
 
@@ -52,6 +53,14 @@ const reducers = {
         const { dirNames, contentTypes } = payload;
         const dirItems = dirNames.map(name => ({ name, friendlyName: name.split('-').slice(1).join('-') }));
         return { ...getInitialState(), dirItems, contentTypes };
+    },
+
+    optimisticReorder(state: State, payload: { oldPos: number; newPos: number }): State {
+        const { oldPos, newPos } = payload;
+        const dirItems = [...state.dirItems];
+        const movingItem = dirItems.splice(oldPos, 1)[0];
+        dirItems.splice(newPos, 0, movingItem);
+        return { ...state, dirItems };
     },
 
     openCreateModal(state: State): State {
@@ -143,9 +152,11 @@ const effects = {
         }
     },
 
-    async reorder(payload: { pathname: string, oldName: string, newPos: number }, rootState: { dirs: State }) {
+    async reorder(payload: { pathname: string, oldName: string, oldPos: number, newPos: number }, rootState: { dirs: State }) {
         try {
-            const { pathname, oldName, newPos } = payload;
+            const { pathname, oldName, oldPos, newPos } = payload;
+            as<Dispatch>(this).optimisticReorder({ oldPos, newPos });
+
             const nameTokens = oldName.split('-');
             nameTokens[0] = `${newPos}`;
             const newName = nameTokens.join('-');

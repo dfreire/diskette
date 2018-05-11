@@ -27,9 +27,10 @@ class Dirs extends React.Component<Props, State>{
 
         const onDragEnd = (result: DropResult) => {
             if (result.source != null && result.destination != null) {
-                const oldName = `${result.source.index}-${result.draggableId}`;
+                const oldPos = result.source.index;
+                const oldName = `${oldPos}-${result.draggableId}`;
                 const newPos = result.destination.index;
-                const payload = { pathname, oldName, newPos };
+                const payload = { pathname, oldName, oldPos, newPos };
                 this.props.reorder(payload);
             }
         }
@@ -128,8 +129,6 @@ const mapState = (models: { dirs: DirsModel.State }) => ({
     dirItems: models.dirs.dirItems,
     contentTypes: models.dirs.contentTypes,
     modalData: models.dirs.modalData,
-    showCreateModal: models.dirs.showCreateModal,
-    showUpdateModal: models.dirs.showUpdateModal,
 });
 
 const mapDispatch = (models: { dirs: DirsModel.Dispatch }) => ({
