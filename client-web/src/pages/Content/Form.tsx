@@ -17,12 +17,14 @@ const Form = (props: Props) => {
     const hasTabs = props.contentPage.contentType.tabs.length > 0;
 
     return hasTabs && (
-        <div>
-            <Tabs titles={props.contentPage.contentType.tabs.map(tab => tab.title)}>
-                {props.contentPage.contentType.tabs.map((tab, i) => (
-                    <Tab key={tab.title} {...props} tabIndex={i} />
-                ))}
-            </Tabs>
+        <div className={classes.container}>
+            <div className={classes.tabsContainer}>
+                <Tabs titles={props.contentPage.contentType.tabs.map(tab => tab.title)}>
+                    {props.contentPage.contentType.tabs.map((tab, i) => (
+                        <Tab key={tab.title} {...props} tabIndex={i} />
+                    ))}
+                </Tabs>
+            </div>
             <div className={classes.buttonsContainer}>
                 <button className={classes.saveButton} onClick={() => props.save({ pathname })}>Gravar</button>
                 <button className={classes.cancelButton} onClick={() => props.load({ pathname })}>Cancelar</button>
@@ -32,9 +34,11 @@ const Form = (props: Props) => {
 }
 
 const classes = {
-    buttonsContainer: "m-6 text-center",
-    saveButton: "inline-block w-32 p-3 m-2 font-sans rounded text-white bg-green hover:bg-green-light",
-    cancelButton: "inline-block w-32 p-3 m-2 font-sans rounded text-grey-dark bg-grey-lighter hover:bg-grey-dark hover:text-white"
+    container: '',
+    buttonsContainer: 'p-4 text-left bg-white _border-b text-sm',
+    saveButton: 'inline-block w-32 p-3 mr-1 rounded text-white bg-green hover:bg-green-light',
+    cancelButton: 'inline-block w-32 p-3 mr-1 rounded text-grey-dark bg-grey-lighter hover:text-grey-darkest',
+    tabsContainer: 'p-4',
 };
 
 interface TabProps extends Props {

@@ -45,8 +45,8 @@ const Tab = (props: { title: string; active: boolean; onClick: { (evt: any): voi
 };
 
 const classes = {
-    regularTab: "inline-block mr-3 mb-3 p-1 no-underline text-grey",
-    activeTab: "inline-block mr-3 mb-3 p-1 no-underline text-black border-b-2 border-black",
+    regularTab: "inline-block mr-4 mb-4 p-1 text-lg no-underline text-grey",
+    activeTab: "inline-block mr-4 mb-4 p-1 text-lg no-underline text-black border-b-2 border-black",
 };
 
 export default Tabs;

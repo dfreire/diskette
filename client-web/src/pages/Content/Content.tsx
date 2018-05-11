@@ -44,8 +44,8 @@ class Content extends React.Component<Props, State> {
 
 const classes = {
     container: 'flex flex-col md:flex-row',
-    formContainer: 'w-full md:w-2/3 p-4',
-    subDirsContainer: 'w-full md:w-1/3 p-4 bg-grey-lightest',
+    formContainer: 'w-full md:w-2/3 pb-6',
+    subDirsContainer: 'w-full md:w-1/3 bg-grey-lightest pb-6',
 };
 
 const mapState = (models: { content: ContentModel.State }) => ({

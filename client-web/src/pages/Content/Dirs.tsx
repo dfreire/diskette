@@ -114,7 +114,7 @@ class Dirs extends React.Component<Props, State>{
 const classes = {
     container: 'text-sm',
 
-    addButtonContainer: 'p-2 md:px-3',
+    addButtonContainer: 'p-4 md:px-3 bg-grey-lightest _border-b',
     addButton: 'w-full bg-green hover:bg-green-light text-white p-3 rounded',
 
     dirList: 'list-reset',
