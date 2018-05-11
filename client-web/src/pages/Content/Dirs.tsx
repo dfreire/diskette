@@ -26,8 +26,11 @@ class Dirs extends React.Component<Props, State>{
         const { pathname } = location;
 
         const onDragEnd = (result: DropResult) => {
-            if (result.destination != null) {
-                this.props.reorder({ pathname, oldName: result.draggableId, newPos: result.destination.index });
+            if (result.source != null && result.destination != null) {
+                const oldName = `${result.source.index}-${result.draggableId}`;
+                const newPos = result.destination.index;
+                const payload = { pathname, oldName, newPos };
+                this.props.reorder(payload);
             }
         }
 
@@ -49,7 +52,7 @@ class Dirs extends React.Component<Props, State>{
                                     const to = [pathname, dirItem.name].join('/');
 
                                     return (
-                                        <Draggable key={dirItem.name} draggableId={dirItem.name} index={i}>
+                                        <Draggable key={dirItem.friendlyName} draggableId={dirItem.friendlyName} index={i}>
                                             {(provided, snapshot) => (
                                                 <li ref={provided.innerRef} {...provided.draggableProps as any} {...provided.dragHandleProps as any} className={classes.dirItem} onMouseLeave={() => this.setState({ deletingItemName: '' })}>
                                                     <Link to={to} className={classes.dirItemLink}>{dirItem.friendlyName}</Link>
