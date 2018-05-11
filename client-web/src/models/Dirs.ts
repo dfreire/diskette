@@ -65,7 +65,7 @@ const reducers = {
 
     openCreateModal(state: State): State {
         const dirItem = { name: '', friendlyName: '' };
-        const modalData = { dirItem, contentType: '' };
+        const modalData = { dirItem, contentType: state.contentTypes[0] };
         return { ...state, showCreateModal: true, showUpdateModal: false, modalData };
     },
 
