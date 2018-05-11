@@ -24,8 +24,8 @@ const Form = (props: Props) => {
                 ))}
             </Tabs>
             <div className={classes.buttonsContainer}>
-                <button className={classes.saveButton} onClick={() => props.save({ pathname })}>Save</button>
-                <button className={classes.cancelButton} onClick={() => props.load({ pathname })}>Cancel</button>
+                <button className={classes.saveButton} onClick={() => props.save({ pathname })}>Gravar</button>
+                <button className={classes.cancelButton} onClick={() => props.load({ pathname })}>Cancelar</button>
             </div>
         </div>
     );

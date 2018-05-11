@@ -23,19 +23,19 @@ const UpdateDirModal = (props: Props) => {
         >
             <div>
                 <div className={classes.headerContainer}>
-                    <h3 className={classes.headerTitle}>Directory</h3>
+                    <h3 className={classes.headerTitle}>Modificar</h3>
                     <button className={classes.headerCloseButton} onClick={props.closeModals}>
                         <Icon name="times" />
                     </button>
                 </div>
                 <div className={classes.formContainer}>
                     <TextField
-                        label="Name"
+                        label="Nome"
                         value={props.modalData.dirItem.friendlyName}
                         onChange={value => props.setModalFriendlyName({ friendlyName: value })}
                     />
                     <div className={classes.saveButtonContainer}>
-                        <button className={classes.saveButton} onClick={() => props.update({ pathname })}>Save</button>
+                        <button className={classes.saveButton} onClick={() => props.update({ pathname })}>Gravar</button>
                     </div>
                 </div>
             </div>

@@ -27,25 +27,25 @@ const CreateDirModal = (props: Props) => {
         >
             <div>
                 <div className={classes.headerContainer}>
-                    <h3 className={classes.headerTitle}>Directory</h3>
+                    <h3 className={classes.headerTitle}>Adicionar</h3>
                     <button className={classes.headerCloseButton} onClick={props.closeModals}>
                         <Icon name="times" />
                     </button>
                 </div>
                 <div className={classes.formContainer}>
                     <TextField
-                        label="Name"
+                        label="Nome"
                         value={props.modalData.dirItem.friendlyName}
                         onChange={value => props.setModalFriendlyName({ friendlyName: value })}
                     />
                     <SelectField
-                        label="Type"
+                        label="Tipo"
                         value={props.modalData.contentType}
                         valueMap={typesMap}
                         onChange={value => props.setModalContentType({ contentType: value })}
                     />
                     <div className={classes.saveButtonContainer}>
-                        <button className={classes.saveButton} onClick={() => props.create({ pathname })}>Save</button>
+                        <button className={classes.saveButton} onClick={() => props.create({ pathname })}>Gravar</button>
                     </div>
                 </div>
             </div>
