@@ -1,4 +1,5 @@
 import axios from 'axios';
+import * as slug from 'slugg';
 import { logoutIf401, as } from './util';
 
 type DirItem = { name: string; friendlyName: string };
@@ -123,9 +124,16 @@ const effects = {
 
     async update(payload: { pathname: string }, rootState: { dirs: State }) {
         try {
-            const { modalData } = rootState.dirs;
             const { pathname } = payload;
-            console.log('update', { pathname, modalData });
+            const { modalData } = rootState.dirs;
+            const { friendlyName } = modalData.dirItem;
+            const oldName = modalData.dirItem.name;
+            const oldPos = modalData.dirItem.name.split('-')[0];
+            const newName = `${oldPos}-${slug(friendlyName)}`;
+
+            // substitute '/content' by '/api/dirs' in from the beginning of the pathname
+            const url = ['/api/dirs', ...pathname.split('/').filter(t => t.length > 0).slice(1)].join('/');
+            await axios.put(url, { oldName, newName });
 
             as<Dispatch>(this).load({ pathname });
         } catch (err) {

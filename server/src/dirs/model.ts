@@ -33,37 +33,58 @@ export async function create(location: string, friendlyName: string, contentType
     await save(path.join(location, name), { type: contentType, fields: {} });
 }
 
-export async function update(location: string, changes: { oldFriendlyName: string, newFriendlyName: string }[]) {
-    for (let n of changes) {
-        await fs.move(
-            path.join(config.DK_CONTENT_DIR, location, n.oldFriendlyName),
-            path.join(config.DK_CONTENT_DIR, location, n.newFriendlyName),
-        );
+export async function update(location: string, oldName: string, newName: string) {
+    await fs.move(
+        path.join(config.DK_CONTENT_DIR, location, oldName),
+        path.join(config.DK_CONTENT_DIR, location, newName),
+    );
+
+    const oldPos = parseInt(oldName.split('-')[0]);
+    const newPos = parseInt(newName.split('-')[0]);
+
+    if (oldPos === newPos) {
+        return;
+    }
+
+    const dirs = await list(location);
+    dirs.splice(oldPos, 1);
+    dirs.splice(newPos, 0, newName);
+
+    for (let i = 0; i < dirs.length; i++) {
+        const existentName = dirs[i];
+
+        const newNameTokens = existentName.split('-');
+        newNameTokens[0] = `${i}`
+        const _newName = newNameTokens.join('-');
+
+        if (existentName !== _newName) {
+            await fs.move(
+                path.join(config.DK_CONTENT_DIR, location, existentName),
+                path.join(config.DK_CONTENT_DIR, location, _newName),
+            );
+        }
     }
 }
 
 export async function remove(location: string) {
     const tokens = location.split('/');
     const name = tokens.pop();
-    const n = parseInt(name.split('-')[0]);
+    const pos = parseInt(name.split('-')[0]);
     const _location = tokens.join('/')
     const dirs = await list(_location);
 
-    for (let i = 0; i < dirs.length; i++) {
+    await fs.remove(path.join(config.DK_CONTENT_DIR, _location, dirs[pos]));
+
+    for (let i = pos + 1; i < dirs.length; i++) {
         const existentName = dirs[i];
 
-        if (i === n) {
-            await fs.remove(path.join(config.DK_CONTENT_DIR, _location, existentName));
+        const newNameTokens = existentName.split('-');
+        newNameTokens[0] = `${i - 1}`;
+        const newName = newNameTokens.join('-');
 
-        } else if (i > n) {
-            const newNameTokens = existentName.split('-');
-            newNameTokens[0] = `${i - 1}`;
-            const newName = newNameTokens.join('-');
-
-            await fs.move(
-                path.join(config.DK_CONTENT_DIR, _location, existentName),
-                path.join(config.DK_CONTENT_DIR, _location, newName),
-            );
-        }
+        await fs.move(
+            path.join(config.DK_CONTENT_DIR, _location, existentName),
+            path.join(config.DK_CONTENT_DIR, _location, newName),
+        );
     }
 }
