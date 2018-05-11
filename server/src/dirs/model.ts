@@ -42,42 +42,35 @@ export async function update(location: string, oldName: string, newName: string)
             path.join(config.DK_CONTENT_DIR, location, oldName),
             path.join(config.DK_CONTENT_DIR, location, newName),
         );
-
     } else {
         const dirs = await list(location);
         dirs.splice(oldPos, 1);
         dirs.splice(newPos, 0, oldName);
-
-        for (let i = 0; i < dirs.length; i++) {
-            const existentName = dirs[i];
-            const _newName = [`${i}`, ...existentName.split('-').slice(1)].join('-');
-
-            if (existentName !== _newName) {
-                await fs.move(
-                    path.join(config.DK_CONTENT_DIR, location, existentName),
-                    path.join(config.DK_CONTENT_DIR, location, _newName),
-                );
-            }
-        }
+        await sortAndRenameDirs(location, dirs);
     }
 }
 
 export async function remove(location: string) {
     const tokens = location.split('/');
     const name = tokens.pop();
-    const pos = parseInt(name.split('-')[0]);
     const _location = tokens.join('/')
+
+    await fs.remove(path.join(config.DK_CONTENT_DIR, _location, name));
+
     const dirs = await list(_location);
+    await sortAndRenameDirs(_location, dirs);
+}
 
-    await fs.remove(path.join(config.DK_CONTENT_DIR, _location, dirs[pos]));
-
-    for (let i = pos + 1; i < dirs.length; i++) {
+async function sortAndRenameDirs(location, dirs: string[]) {
+    for (let i = 0; i < dirs.length; i++) {
         const existentName = dirs[i];
         const newName = [`${i}`, ...existentName.split('-').slice(1)].join('-');
 
-        await fs.move(
-            path.join(config.DK_CONTENT_DIR, _location, existentName),
-            path.join(config.DK_CONTENT_DIR, _location, newName),
-        );
+        if (existentName !== newName) {
+            await fs.move(
+                path.join(config.DK_CONTENT_DIR, location, existentName),
+                path.join(config.DK_CONTENT_DIR, location, newName),
+            );
+        }
     }
 }
