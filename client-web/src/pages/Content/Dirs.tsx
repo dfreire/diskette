@@ -129,6 +129,8 @@ const mapState = (models: { dirs: DirsModel.State }) => ({
     dirItems: models.dirs.dirItems,
     contentTypes: models.dirs.contentTypes,
     modalData: models.dirs.modalData,
+    showCreateModal: models.dirs.showCreateModal,
+    showUpdateModal: models.dirs.showUpdateModal,
 });
 
 const mapDispatch = (models: { dirs: DirsModel.Dispatch }) => ({
