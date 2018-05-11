@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import { connect } from 'react-redux';
 import * as DirsModel from '../../models/Dirs';
 import CreateDirModal from './CreateDirModal';
@@ -24,6 +25,12 @@ class Dirs extends React.Component<Props, State>{
         const { deletingItemName } = this.state;
         const { pathname } = location;
 
+        const onDragEnd = (result: DropResult) => {
+            if (result.destination != null) {
+                this.props.reorder({ pathname, oldName: result.draggableId, newPos: result.destination.index });
+            }
+        }
+
         return (
             <div className={classes.container}>
                 <div className={classes.addButtonContainer}>
@@ -34,39 +41,49 @@ class Dirs extends React.Component<Props, State>{
                         <Icon name="plus" />
                     </button>
                 </div>
-                <ul className={classes.dirList}>
-                    {dirItems.map((dirItem, i) => {
-                        const to = [pathname, dirItem.name].join('/');
+                <DragDropContext onDragEnd={onDragEnd}>
+                    <Droppable droppableId="droppable">
+                        {(provided, snapshot) => (
+                            <ul ref={provided.innerRef} className={classes.dirList}>
+                                {dirItems.map((dirItem, i) => {
+                                    const to = [pathname, dirItem.name].join('/');
 
-                        return (
-                            <li key={dirItem.name} className={classes.dirItem} onMouseLeave={() => this.setState({ deletingItemName: '' })}>
-                                <Link to={to} className={classes.dirItemLink}>{dirItem.friendlyName}</Link>
-                                <span className={classes.dirItemButtons}>
-                                    {deletingItemName !== dirItem.name &&
-                                        <button className={classes.dirItemButton} onClick={() => openUpdateModal({ dirItem })}>
-                                            <Icon name="cog" />
-                                        </button>
-                                    }
-                                    {deletingItemName !== dirItem.name &&
-                                        <button className={classes.dirItemButton} onClick={() => this.setState({ deletingItemName: dirItem.name })}>
-                                            <Icon name="trash" />
-                                        </button>
-                                    }
-                                    {deletingItemName === dirItem.name &&
-                                        <button className={classes.dirItemButton} onClick={() => remove({ pathname, dirItem })}>
-                                            <Icon name="check" />
-                                        </button>
-                                    }
-                                    {deletingItemName === dirItem.name &&
-                                        <button className={classes.dirItemButton} onClick={() => this.setState({ deletingItemName: '' })}>
-                                            <Icon name="ban" />
-                                        </button>
-                                    }
-                                </span>
-                            </li>
-                        );
-                    })}
-                </ul>
+                                    return (
+                                        <Draggable key={dirItem.name} draggableId={dirItem.name} index={i}>
+                                            {(provided, snapshot) => (
+                                                <li ref={provided.innerRef} {...provided.draggableProps as any} {...provided.dragHandleProps as any} className={classes.dirItem} onMouseLeave={() => this.setState({ deletingItemName: '' })}>
+                                                    <Link to={to} className={classes.dirItemLink}>{dirItem.friendlyName}</Link>
+                                                    <span className={classes.dirItemButtons}>
+                                                        {deletingItemName !== dirItem.name &&
+                                                            <button className={classes.dirItemButton} onClick={() => openUpdateModal({ dirItem })}>
+                                                                <Icon name="cog" />
+                                                            </button>
+                                                        }
+                                                        {deletingItemName !== dirItem.name &&
+                                                            <button className={classes.dirItemButton} onClick={() => this.setState({ deletingItemName: dirItem.name })}>
+                                                                <Icon name="trash" />
+                                                            </button>
+                                                        }
+                                                        {deletingItemName === dirItem.name &&
+                                                            <button className={classes.dirItemButton} onClick={() => remove({ pathname, dirItem })}>
+                                                                <Icon name="check" />
+                                                            </button>
+                                                        }
+                                                        {deletingItemName === dirItem.name &&
+                                                            <button className={classes.dirItemButton} onClick={() => this.setState({ deletingItemName: '' })}>
+                                                                <Icon name="ban" />
+                                                            </button>
+                                                        }
+                                                    </span>
+                                                </li>
+                                            )}
+                                        </Draggable>
+                                    );
+                                })}
+                            </ul>
+                        )}
+                    </Droppable>
+                </DragDropContext>
 
                 <CreateDirModal {...this.props} />
                 <UpdateDirModal {...this.props} />
@@ -122,6 +139,7 @@ const mapDispatch = (models: { dirs: DirsModel.Dispatch }) => ({
     setModalContentType: models.dirs.setModalContentType,
     create: models.dirs.create,
     update: models.dirs.update,
+    reorder: models.dirs.reorder,
     remove: models.dirs.remove,
 }) as any;
 

@@ -26,6 +26,7 @@ export interface Dispatch {
     load: { (payload: { pathname: string }): void };
     create: { (payload: { pathname: string }): void };
     update: { (payload: { pathname: string }): void };
+    reorder: { (payload: { pathname: string, oldName: string, newPos: number }): void };
     remove: { (payload: { pathname: string, dirItem: DirItem }): void };
 };
 
@@ -130,6 +131,24 @@ const effects = {
             const oldName = modalData.dirItem.name;
             const oldPos = modalData.dirItem.name.split('-')[0];
             const newName = `${oldPos}-${slug(friendlyName)}`;
+
+            // substitute '/content' by '/api/dirs' in from the beginning of the pathname
+            const url = ['/api/dirs', ...pathname.split('/').filter(t => t.length > 0).slice(1)].join('/');
+            await axios.put(url, { oldName, newName });
+
+            as<Dispatch>(this).load({ pathname });
+        } catch (err) {
+            console.error(err);
+            logoutIf401(err);
+        }
+    },
+
+    async reorder(payload: { pathname: string, oldName: string, newPos: number }, rootState: { dirs: State }) {
+        try {
+            const { pathname, oldName, newPos } = payload;
+            const nameTokens = oldName.split('-');
+            nameTokens[0] = `${newPos}`;
+            const newName = nameTokens.join('-');
 
             // substitute '/content' by '/api/dirs' in from the beginning of the pathname
             const url = ['/api/dirs', ...pathname.split('/').filter(t => t.length > 0).slice(1)].join('/');
