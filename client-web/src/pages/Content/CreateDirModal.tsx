@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as Modal from 'react-modal';
+import * as slug from 'slugg';
 const { Icon } = require('react-fa');
 import * as DirsModel from '../../models/Dirs';
 import TextField from '../../components/TextField';
@@ -45,7 +46,13 @@ const CreateDirModal = (props: Props) => {
                         onChange={value => props.setModalContentType({ contentType: value })}
                     />
                     <div className={classes.saveButtonContainer}>
-                        <button className={classes.saveButton} onClick={() => props.create({ pathname })}>Gravar</button>
+                        <button
+                            className={classes.saveButton}
+                            onClick={() => props.create({ pathname })}
+                            disabled={slug(props.modalData.dirItem.friendlyName).length === 0}
+                        >
+                            Gravar
+                        </button>
                     </div>
                 </div>
             </div>
