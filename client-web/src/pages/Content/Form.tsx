@@ -37,7 +37,7 @@ const classes = {
     container: '',
     buttonsContainer: 'p-4 text-left bg-white _border-b text-sm',
     saveButton: 'inline-block w-32 p-3 mr-1 rounded text-white bg-green hover:bg-green-light',
-    cancelButton: 'inline-block w-32 p-3 mr-1 rounded text-grey-dark bg-grey-lighter hover:text-grey-darkest',
+    cancelButton: 'inline-block w-32 p-3 mx-1 rounded text-grey-dark bg-grey-lighter hover:text-grey-darkest',
     tabsContainer: 'p-4',
 };
 
