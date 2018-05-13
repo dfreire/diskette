@@ -7,6 +7,7 @@ import Tabs from '../../components/Tabs';
 import TextField from '../../components/TextField';
 import TextAreaField from '../../components/TextAreaField';
 import ImageField from '../../components/ImageField';
+import NumberField from '../../components/NumberField';
 
 interface Props extends ContentModel.State, ContentModel.Dispatch {
     location: Location;
@@ -80,6 +81,14 @@ const Field = (props: FieldProps) => {
                 <TextAreaField
                     label={props.fieldType.label}
                     value={props.value || ''}
+                    onChange={(value) => props.setValue({ key: props.fieldType.key, value })}
+                />
+            );
+        case 'number':
+            return (
+                <NumberField
+                    label={props.fieldType.label}
+                    value={props.value}
                     onChange={(value) => props.setValue({ key: props.fieldType.key, value })}
                 />
             );

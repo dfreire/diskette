@@ -17,7 +17,7 @@ export interface Tab {
 export interface Field {
     label: string;
     key: string;
-    type: 'text' | 'textarea' | 'image';
+    type: 'text' | 'textarea' | 'number' | 'image';
 }
 
 export interface TextField extends Field {
@@ -28,6 +28,16 @@ export interface TextField extends Field {
 export interface TextAreaField extends Field {
     type: 'textarea';
     value: string;
+}
+
+export interface NumberField extends Field {
+    type: 'number';
+    value: number;
+    decimalPlaces: number;
+    decimalSeparator: string;
+    thousandsSeparator: string;
+    prefix: string;
+    suffix: string;
 }
 
 export interface ImageField extends Field {
