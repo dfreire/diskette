@@ -9,6 +9,7 @@ import TextField from '../../components/TextField';
 import TextAreaField from '../../components/TextAreaField';
 import ImageField from '../../components/ImageField';
 import NumberField from '../../components/NumberField';
+import LinkField from '../../components/LinkField';
 
 interface Props extends ContentModel.State, ContentModel.Dispatch, UiModel.State {
     location: Location;
@@ -101,6 +102,14 @@ const Field = (props: FieldProps) => {
                     value={getImgSrc(props)}
                     onUpload={(fileList) => props.upload({ pathname: props.location.pathname, fileKey: props.fieldType.key, fileList })}
                     onRemove={() => props.setValue({ key: props.fieldType.key, value: '' })}
+                />
+            );
+        case 'link':
+            return (
+                <LinkField
+                    label={props.fieldType.label}
+                    value={props.value || ''}
+                    onChange={(value) => props.setValue({ key: props.fieldType.key, value })}
                 />
             );
         default:
