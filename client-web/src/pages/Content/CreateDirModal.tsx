@@ -3,16 +3,18 @@ import * as Modal from 'react-modal';
 import * as slug from 'slugg';
 const { Icon } = require('react-fa');
 import * as DirsModel from '../../models/Dirs';
+import * as UiModel from '../../models/Ui';
 import TextField from '../../components/TextField';
 import SelectField from '../../components/SelectField';
 import ModalClasses from './ModalClasses';
 
-interface Props extends DirsModel.State, DirsModel.Dispatch {
+interface Props extends DirsModel.State, DirsModel.Dispatch, UiModel.State {
     location: Location;
 }
 
 const CreateDirModal = (props: Props) => {
     const { pathname } = props.location;
+    const messages = props.messages.createDirModal;
 
     const typesMap = {};
     props.contentTypes.forEach(t => typesMap[t] = t);
@@ -28,19 +30,19 @@ const CreateDirModal = (props: Props) => {
         >
             <div>
                 <div className={classes.headerContainer}>
-                    <h3 className={classes.headerTitle}>Adicionar</h3>
+                    <h3 className={classes.headerTitle}>{messages.title}</h3>
                     <button className={classes.headerCloseButton} onClick={props.closeModals}>
                         <Icon name="times" />
                     </button>
                 </div>
                 <div className={classes.formContainer}>
                     <TextField
-                        label="Nome"
+                        label={messages.nameField}
                         value={props.modalData.dirItem.friendlyName}
                         onChange={value => props.setModalFriendlyName({ friendlyName: value })}
                     />
                     <SelectField
-                        label="Tipo"
+                        label={messages.typeField}
                         value={props.modalData.contentType}
                         valueMap={typesMap}
                         onChange={value => props.setModalContentType({ contentType: value })}
@@ -51,7 +53,7 @@ const CreateDirModal = (props: Props) => {
                             onClick={() => props.create({ pathname })}
                             disabled={slug(props.modalData.dirItem.friendlyName).length === 0}
                         >
-                            Gravar
+                            {messages.saveButton}
                         </button>
                     </div>
                 </div>

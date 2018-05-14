@@ -13,14 +13,16 @@ import './index.css';
 Modal.setAppElement('#root');
 
 const store = init({ models });
-
-ReactDOM.render(
-	<Provider store={store}>
-		<BrowserRouter>
-			<App />
-		</BrowserRouter>
-	</Provider>,
-	document.getElementById('root') as HTMLElement
-);
+const { dispatch } = store;
+dispatch['ui'].loadMessages().then(() => {
+	ReactDOM.render(
+		<Provider store={store}>
+			<BrowserRouter>
+				<App />
+			</BrowserRouter>
+		</Provider>,
+		document.getElementById('root') as HTMLElement
+	);
+});
 
 registerServiceWorker();

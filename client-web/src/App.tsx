@@ -4,10 +4,11 @@ import { connect } from 'react-redux';
 import Breadcrumb from './Breadcrumb';
 import Content from './pages/Content/Content';
 import Login from './pages/Login';
+import * as UiModel from './models/Ui';
 import * as UserModel from './models/User';
 const { Icon } = require('react-fa');
 
-interface Props extends UserModel.State, UserModel.Dispatch {
+interface Props extends UiModel.State, UserModel.State, UserModel.Dispatch {
 	location: Location;
 }
 
@@ -21,7 +22,7 @@ class App extends React.Component<Props, {}> {
 		return (
 			<div className={[classes.container, classes.containerLoggedIn].join(' ')}>
 				<div className={classes.headerContainer}>
-					<h2 className={classes.headerTitle}>Diskette</h2>
+					<h2 className={classes.headerTitle}>{this.props.messages.title}</h2>
 					<button className={classes.headerLogoutButton} onClick={this.props.logout}>
 						<Icon name="times" />
 					</button>
@@ -44,7 +45,7 @@ class App extends React.Component<Props, {}> {
 		return (
 			<div className={[classes.container, classes.containerLoggedOut].join(' ')} style={{ marginTop }}>
 				<div className={classes.headerContainer}>
-					<div className={classes.headerTitle}><h2>Diskette</h2></div>
+					<h2 className={classes.headerTitle}>{this.props.messages.title}</h2>
 				</div>
 				<Switch>
 					<Route path="/login" component={Login} />
@@ -64,7 +65,8 @@ const classes = {
 	headerLogoutButton: 'w-8 h-8 rounded-tr p-2 rounded-bl text-grey hover:bg-grey-darkest hover:text-white font-thin font-mono',
 };
 
-const mapState = (models: { user: UserModel.State }) => ({
+const mapState = (models: { user: UserModel.State, ui: UiModel.State }) => ({
+	messages: models.ui.messages,
 	sessionToken: models.user.sessionToken,
 });
 

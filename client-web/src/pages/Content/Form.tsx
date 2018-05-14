@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import * as queryString from 'query-string';
 import * as ContentModel from '../../models/Content';
+import * as UiModel from '../../models/Ui';
 import * as Types from '../../models/Types';
 import Tabs from '../../components/Tabs';
 import TextField from '../../components/TextField';
@@ -9,12 +10,13 @@ import TextAreaField from '../../components/TextAreaField';
 import ImageField from '../../components/ImageField';
 import NumberField from '../../components/NumberField';
 
-interface Props extends ContentModel.State, ContentModel.Dispatch {
+interface Props extends ContentModel.State, ContentModel.Dispatch, UiModel.State {
     location: Location;
 }
 
 const Form = (props: Props) => {
     const { pathname } = props.location;
+    const messages = props.messages.contentPage;
     const hasTabs = props.contentPage.contentType.tabs.length > 0;
 
     return hasTabs && (
@@ -27,8 +29,8 @@ const Form = (props: Props) => {
                 </Tabs>
             </div>
             <div className={classes.buttonsContainer}>
-                <button className={classes.saveButton} onClick={() => props.save({ pathname })}>Gravar</button>
-                <button className={classes.cancelButton} onClick={() => props.load({ pathname })}>Cancelar</button>
+                <button className={classes.saveButton} onClick={() => props.save({ pathname })}>{messages.saveButton}</button>
+                <button className={classes.cancelButton} onClick={() => props.load({ pathname })}>{messages.cancelButton}</button>
             </div>
         </div>
     );
@@ -132,7 +134,8 @@ function getImgSrc(props: FieldProps) {
     return imgSrc;
 }
 
-const mapState = (models: { content: ContentModel.State }) => ({
+const mapState = (models: { content: ContentModel.State, ui: UiModel.State }) => ({
+    messages: models.ui.messages,
     contentPage: models.content.contentPage,
 });
 

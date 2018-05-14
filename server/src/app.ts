@@ -2,6 +2,7 @@ import * as http from 'http';
 import * as path from 'path';
 import * as express from 'express';
 import config from './common/config';
+import uiRouter from './ui/routes';
 import usersRouter from './users/routes';
 import contentRouter from './content/routes';
 import dirsRouter from './dirs/routes';
@@ -10,6 +11,7 @@ import filesRouter from './files/routes';
 
 const app = express();
 app.use(express.json());
+app.use('/api/ui', uiRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/content', contentRouter);
 app.use('/api/dirs', dirsRouter);

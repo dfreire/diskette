@@ -2,16 +2,18 @@ import * as React from 'react';
 import * as Modal from 'react-modal';
 import * as slug from 'slugg';
 const { Icon } = require('react-fa');
+import * as UiModel from '../../models/Ui';
 import * as DirsModel from '../../models/Dirs';
 import TextField from '../../components/TextField';
 import ModalClasses from './ModalClasses';
 
-interface Props extends DirsModel.State, DirsModel.Dispatch {
+interface Props extends DirsModel.State, DirsModel.Dispatch, UiModel.State {
     location: Location;
 }
 
 const UpdateDirModal = (props: Props) => {
     const { pathname } = props.location;
+    const messages = props.messages.updateDirModal;
 
     return (
         <Modal
@@ -24,14 +26,14 @@ const UpdateDirModal = (props: Props) => {
         >
             <div>
                 <div className={classes.headerContainer}>
-                    <h3 className={classes.headerTitle}>Modificar</h3>
+                    <h3 className={classes.headerTitle}>{messages.title}</h3>
                     <button className={classes.headerCloseButton} onClick={props.closeModals}>
                         <Icon name="times" />
                     </button>
                 </div>
                 <div className={classes.formContainer}>
                     <TextField
-                        label="Nome"
+                        label={messages.nameField}
                         value={props.modalData.dirItem.friendlyName}
                         onChange={value => props.setModalFriendlyName({ friendlyName: value })}
                     />
@@ -41,7 +43,7 @@ const UpdateDirModal = (props: Props) => {
                             onClick={() => props.create({ pathname })}
                             disabled={slug(props.modalData.dirItem.friendlyName).length === 0}
                         >
-                            Gravar
+                            {messages.saveButton}
                         </button>
                     </div>
                 </div>

@@ -2,12 +2,13 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import { connect } from 'react-redux';
+import * as UiModel from '../../models/Ui';
 import * as DirsModel from '../../models/Dirs';
 import CreateDirModal from './CreateDirModal';
 import UpdateDirModal from './UpdateDirModal';
 const { Icon } = require('react-fa');
 
-interface Props extends DirsModel.State, DirsModel.Dispatch {
+interface Props extends UiModel.State, DirsModel.State, DirsModel.Dispatch {
     location: Location;
 }
 
@@ -125,7 +126,8 @@ const classes = {
     dirItemButton: 'px-1 text-grey hover:text-black',
 };
 
-const mapState = (models: { dirs: DirsModel.State }) => ({
+const mapState = (models: { dirs: DirsModel.State, ui: UiModel.State }) => ({
+    messages: models.ui.messages,
     dirItems: models.dirs.dirItems,
     contentTypes: models.dirs.contentTypes,
     modalData: models.dirs.modalData,
