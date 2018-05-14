@@ -15,6 +15,8 @@ Modal.setAppElement('#root');
 const store = init({ models });
 const { dispatch } = store;
 dispatch['ui'].loadMessages().then(() => {
+	document.title = store.getState().ui.messages.title;
+
 	ReactDOM.render(
 		<Provider store={store}>
 			<BrowserRouter>
