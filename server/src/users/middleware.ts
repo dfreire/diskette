@@ -9,11 +9,18 @@ const permit = new Bearer();
 
 export async function authenticate(req, res, next) {
 	try {
-		const sessionToken = permit.check(req); // header "Authorization: Bearer token"
-		const session = jwtVerify<Session>(sessionToken, config.DK_JWT_SECRET);
-		const emailSha1 = decrypt(session.id, config.DK_ENCRYPTION_KEY);
-		req.user = await usersModel.getByEmailSha1(emailSha1);
-		next();
+		// header "Authorization: Bearer token"
+		const token = permit.check(req);
+		
+		if (token === config.DK_API_KEY) {
+			next();
+			
+		} else {
+			const session = jwtVerify<Session>(token, config.DK_JWT_SECRET);
+			const emailSha1 = decrypt(session.id, config.DK_ENCRYPTION_KEY);
+			req.user = await usersModel.getByEmailSha1(emailSha1);
+			next();
+		}
 	} catch (err) {
 		permit.fail(res);
 		res.sendStatus(401);

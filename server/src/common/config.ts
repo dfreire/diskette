@@ -2,6 +2,7 @@ import * as path from 'path';
 
 interface Config {
     DK_PORT: number;
+    DK_API_KEY: string;
     DK_ENCRYPTION_KEY: string;
     DK_ENCRYPT_DATA: boolean;
     DK_JWT_SECRET: string;
