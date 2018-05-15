@@ -36,7 +36,7 @@ router.get('/*', async (req, res) => {
 		}
 		fileName += ext;
 
-		const cacheFile = path.join(process.cwd(), cacheDir, fileName);
+		const cacheFile = path.join(cacheDir, fileName);
 
 		if (!fs.existsSync(cacheFile)) {
 			await sharp(path.join(config.DK_CONTENT_DIR, pathname))
