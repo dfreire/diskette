@@ -10,6 +10,7 @@ interface Config {
     DK_CONTENT_TYPES_DIR: string;
     DK_UPLOAD_DIR: string;
     DK_UI_DIR: string;
+    DK_CACHE_DIR: string;
 }
 
 function _parseBoolean(value: any) {
@@ -29,5 +30,6 @@ config.DK_CONTENT_DIR = path.join(process.cwd(), config.DK_CONTENT_DIR);
 config.DK_CONTENT_TYPES_DIR = path.join(process.cwd(), config.DK_CONTENT_TYPES_DIR);
 config.DK_UPLOAD_DIR = path.join(process.cwd(), config.DK_UPLOAD_DIR);
 config.DK_UI_DIR = path.join(process.cwd(), config.DK_UI_DIR);
+config.DK_CACHE_DIR = path.join(process.cwd(), config.DK_CACHE_DIR);
 
 export default config;
