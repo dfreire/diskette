@@ -42,8 +42,8 @@
     "test": "jest --coverage",
     "test-watch": "jest --watch",
     "build": "npm run clean && npm run compile",
-    "start": "nodemon out/app.js",
-    "serve": "node out/app.js",
+    "start": "nodemon ./out/app.js",
+    "serve": "node ./out/app.js",
     "create-user": "node out/users/scripts/create.js",
     "update-user-email": "node out/users/scripts/update-email.js",
     "update-user-password": "node out/users/scripts/update-password.js"
