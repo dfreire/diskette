@@ -25,11 +25,5 @@ function _parseInt(value: any) {
 const config: Config = require('dotenv').config().parsed;
 config.DK_PORT = _parseInt(config.DK_PORT);
 config.DK_ENCRYPT_DATA = _parseBoolean(config.DK_ENCRYPT_DATA);
-config.DK_USERS_DIR = path.join(process.cwd(), config.DK_USERS_DIR);
-config.DK_CONTENT_DIR = path.join(process.cwd(), config.DK_CONTENT_DIR);
-config.DK_CONTENT_TYPES_DIR = path.join(process.cwd(), config.DK_CONTENT_TYPES_DIR);
-config.DK_UPLOAD_DIR = path.join(process.cwd(), config.DK_UPLOAD_DIR);
-config.DK_UI_DIR = path.join(process.cwd(), config.DK_UI_DIR);
-config.DK_CACHE_DIR = path.join(process.cwd(), config.DK_CACHE_DIR);
 
 export default config;
