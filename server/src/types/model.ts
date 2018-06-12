@@ -15,7 +15,7 @@ export async function list(): Promise<string[]> {
     const list = [];
 
     fs.readdirSync(dir).forEach(file => {
-        fs.statSync(path.join(dir, file)).isFile() && list.push(file);
+        fs.statSync(path.join(dir, file)).isFile() && file.endsWith('.json') && list.push(file);
     });
 
     return list
