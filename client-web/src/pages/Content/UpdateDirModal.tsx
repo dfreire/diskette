@@ -40,7 +40,7 @@ const UpdateDirModal = (props: Props) => {
                     <div className={classes.saveButtonContainer}>
                         <button
                             className={classes.saveButton}
-                            onClick={() => props.create({ pathname })}
+                            onClick={() => props.update({ pathname })}
                             disabled={slug(props.modalData.dirItem.friendlyName).length === 0}
                         >
                             {messages.saveButton}
