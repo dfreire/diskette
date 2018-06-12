@@ -1,5 +1,3 @@
-import * as path from 'path';
-
 interface Config {
     DK_PORT: number;
     DK_API_KEY: string;

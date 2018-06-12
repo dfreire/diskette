@@ -1,5 +1,4 @@
 import * as http from 'http';
-import * as path from 'path';
 import * as express from 'express';
 import config from './common/config';
 import uiRouter from './ui/routes';
