@@ -1,5 +1,4 @@
 import { Bearer } from 'permit';
-import * as jwt from 'jsonwebtoken';
 import config from '../common/config';
 import { decrypt, jwtVerify } from 'crypto-buddy';
 import * as usersModel from '../users/model';

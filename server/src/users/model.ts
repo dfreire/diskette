@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
-import { encrypt, hashPass, sha1 } from 'crypto-buddy';
+import { hashPass, sha1 } from 'crypto-buddy';
 import config from '../common/config';
 import { readJson, outputJson } from '../common/io';
 

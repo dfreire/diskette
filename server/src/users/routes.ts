@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import * as jwt from 'jsonwebtoken';
 import config from '../common/config';
 import { encrypt, sha1, comparePass, jwtSign } from 'crypto-buddy';
 import { Session } from './model';
