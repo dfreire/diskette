@@ -2,17 +2,17 @@ import * as prompts from 'prompts';
 import * as model from '../model';
 
 async function run() {
-    const { email, password } = await prompts([{
+    const { username, password } = await prompts([{
         type: 'text',
-        name: 'email',
-        message: 'email'
+        name: 'username',
+        message: 'username'
     }, {
         type: 'password',
         name: 'password',
         message: 'password'
     }]);
 
-    await model.create(email, password);
+    await model.create(username, password);
 }
 
 run();

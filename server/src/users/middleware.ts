@@ -16,8 +16,8 @@ export async function authenticate(req, res, next) {
 			
 		} else {
 			const session = jwtVerify<Session>(token, config.DK_JWT_SECRET);
-			const emailSha1 = decrypt(session.id, config.DK_ENCRYPTION_KEY);
-			req.user = await usersModel.getByEmailSha1(emailSha1);
+			const username = decrypt(session.id, config.DK_ENCRYPTION_KEY);
+			req.user = await usersModel.getByUsername(username);
 			next();
 		}
 	} catch (err) {

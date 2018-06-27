@@ -5,7 +5,7 @@ import { as } from './util';
 export interface Messages {
     title: string;
     loginPage: {
-        emailField: string;
+        usernameField: string;
         passwordField: string;
         loginButton: string;
     };
@@ -38,7 +38,7 @@ export const INITIAL_STATE: State = {
     messages: {
         title: 'Diskette',
         loginPage: {
-            emailField: 'Email',
+            usernameField: 'Username',
             passwordField: 'Password',
             loginButton: 'Login',
         },

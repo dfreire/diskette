@@ -7,7 +7,7 @@ import { readJson, outputJson } from '../common/io';
 fs.mkdirpSync(config.DK_USERS_DIR);
 
 export interface User {
-    email: string;
+    username: string;
     passHash: string;
 }
 
@@ -15,37 +15,33 @@ export interface Session {
     id: string;
 }
 
-export async function create(email: string, password: string) {
+export async function create(username: string, password: string) {
     const user: User = {
-        email,
+        username,
         passHash: hashPass(password),
     };
 
     await save(user);
 }
 
-export async function setEmail(currentEmail: string, newEmail: string) {
-    const user: User = await getByEmail(currentEmail);
-    user.email = newEmail;
+export async function setUsername(currentUsername: string, newUsername: string) {
+    const user: User = await getByUsername(currentUsername);
+    user.username = newUsername;
     await save(user);
 
-    const oldFile = path.join(config.DK_USERS_DIR, `${sha1(currentEmail)}.json`);
+    const oldFile = path.join(config.DK_USERS_DIR, `${currentUsername}.json`);
     await fs.remove(oldFile);
 }
 
-export async function setPassword(currentEmail: string, newPassword: string) {
-    const user: User = await getByEmail(currentEmail);
+export async function setPassword(currentUsername: string, newPassword: string) {
+    const user: User = await getByUsername(currentUsername);
     user.passHash = hashPass(newPassword);
     await save(user);
 }
 
-export async function getByEmail(email: string): Promise<User> {
-    return getByEmailSha1(sha1(email));
-}
-
-export async function getByEmailSha1(emailSha1: String): Promise<User> {
+export async function getByUsername(username: string): Promise<User> {
     try {
-        const file = path.join(config.DK_USERS_DIR, `${emailSha1}.json`);
+        const file = path.join(config.DK_USERS_DIR, `${username}.json`);
         const user: User = await readJson(file);
         return user;
     } catch (err) {
@@ -54,6 +50,6 @@ export async function getByEmailSha1(emailSha1: String): Promise<User> {
 }
 
 async function save(user: User) {
-    const file = path.join(config.DK_USERS_DIR, `${sha1(user.email)}.json`);
+    const file = path.join(config.DK_USERS_DIR, `${user.username}.json`);
     await outputJson(file, user);
 }

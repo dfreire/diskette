@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import * as UserModel from '../models/User';
 import * as UiModel from '../models/Ui';
-import EmailField from '../components/EmailField';
+import TextField from '../components/TextField';
 import PasswordField from '../components/PasswordField';
 
 interface Props extends UiModel.State, UserModel.State, UserModel.Dispatch {
@@ -19,10 +19,10 @@ const Login = (props: Props) => {
     return (
         <div className={classes.container}>
             <form>
-                <EmailField
-                    label={messages.emailField}
-                    value={props.loginPage.email}
-                    onChange={value => props.setValue({ key: 'email', value })}
+                <TextField
+                    label={messages.usernameField}
+                    value={props.loginPage.username}
+                    onChange={value => props.setValue({ key: 'username', value })}
                 />
                 <PasswordField
                     label={messages.passwordField}

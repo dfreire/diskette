@@ -5,7 +5,7 @@ window.location.assign = jest.fn();
 
 describe('when the user is logged out', () => {
     describe('and tries to login with the right credentials', () => {
-        const email = 'the_right_email';
+        const username = 'the_right_username';
         const password = 'the_right_password';
         const sessionToken = 'a_session_token';
         const serverResponse = { status: 200, data: sessionToken };
@@ -21,14 +21,14 @@ describe('when the user is logged out', () => {
             axios.post.mockImplementationOnce(() => Promise.resolve(serverResponse));
 
             const store = init({ models: { user } });
-            (store.dispatch['user'] as Dispatch).setValue({ key: 'email', value: email });
+            (store.dispatch['user'] as Dispatch).setValue({ key: 'username', value: username });
             (store.dispatch['user'] as Dispatch).setValue({ key: 'password', value: password });
 
             await (store.dispatch['user'] as Dispatch).login();
         });
 
         it('the right credentials are sent to the backend', () => {
-            expect(axios.post).toHaveBeenCalledWith('/api/users/login', { email, password });
+            expect(axios.post).toHaveBeenCalledWith('/api/users/login', { username, password });
         });
 
         it('the sesstionToken in stored in the localStorage', () => {
@@ -42,7 +42,7 @@ describe('when the user is logged out', () => {
     });
 
     describe('and tries to login with the wrong credentials', () => {
-        const email = 'the_wrong_email';
+        const username = 'the_wrong_username';
         const password = 'the_wrong_password';
         const serverResponse = { status: 401 };
         let axios: any;
@@ -58,14 +58,14 @@ describe('when the user is logged out', () => {
             axios.post.mockImplementationOnce(() => Promise.reject(serverResponse));
 
             store = init({ models: { user } });
-            (store.dispatch['user'] as Dispatch).setValue({ key: 'email', value: email });
+            (store.dispatch['user'] as Dispatch).setValue({ key: 'username', value: username });
             (store.dispatch['user'] as Dispatch).setValue({ key: 'password', value: password });
 
             await (store.dispatch['user'] as Dispatch).login();
         });
 
         it('the wrong credentials are sent to the backend', () => {
-            expect(axios.post).toHaveBeenCalledWith('/api/users/login', { email, password });
+            expect(axios.post).toHaveBeenCalledWith('/api/users/login', { username, password });
         });
 
         it('an error message is stored in the state ', () => {

@@ -9,14 +9,14 @@ export interface State {
     sessionToken: string;
 
     loginPage: {
-        email: string;
+        username: string;
         password: string;
         errorMessage: string;
     };
 }
 
 export interface Dispatch {
-    setValue: { (payload: { key: 'email' | 'password', value: string }): void };
+    setValue: { (payload: { key: 'username' | 'password', value: string }): void };
     login: { (): void };
     onLoginError: { (): void };
     logout: { (): void };
@@ -26,14 +26,14 @@ export const INITIAL_STATE: State = {
     sessionToken,
 
     loginPage: {
-        email: '',
+        username: '',
         password: '',
         errorMessage: '',
     },
 };
 
 const reducers = {
-    setValue(state: State, payload: { key: 'email' | 'password', value: string }): State {
+    setValue(state: State, payload: { key: 'username' | 'password', value: string }): State {
         const { key, value } = payload;
         const loginPage = { ...state.loginPage };
         loginPage[key] = value;
@@ -50,8 +50,8 @@ const reducers = {
 const effects = {
     async login(payload: {}, rootState: { user: State }) {
         try {
-            const { email, password } = rootState.user.loginPage;
-            const res = await axios.post('/api/users/login', { email, password });
+            const { username, password } = rootState.user.loginPage;
+            const res = await axios.post('/api/users/login', { username, password });
             if (res.status === 200) {
                 const sessionToken = res.data;
                 localStorage.setItem('sessionToken', sessionToken);
