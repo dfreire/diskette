@@ -15,9 +15,7 @@ interface Props extends DirsModel.State, DirsModel.Dispatch, UiModel.State {
 const CreateDirModal = (props: Props) => {
     const { pathname } = props.location;
     const messages = props.messages.createDirModal;
-
-    const typesMap = {};
-    props.contentTypes.forEach(t => typesMap[t] = t);
+    const options = props.contentTypes.map(contentType => ({ label: contentType, value: contentType }));
 
     return (
         <Modal
@@ -44,7 +42,7 @@ const CreateDirModal = (props: Props) => {
                     <SelectField
                         label={messages.typeField}
                         value={props.modalData.contentType}
-                        valueMap={typesMap}
+                        options={options}
                         onChange={value => props.setModalContentType({ contentType: value })}
                     />
                     <div className={classes.saveButtonContainer}>

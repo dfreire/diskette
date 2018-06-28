@@ -17,7 +17,7 @@ export interface Tab {
 export interface Field {
     label: string;
     key: string;
-    type: 'text' | 'textarea' | 'number' | 'image' | 'link';
+    type: 'text' | 'textarea' | 'number' | 'image' | 'link' | 'select';
 }
 
 export interface TextField extends Field {
@@ -50,4 +50,14 @@ export interface ImageField extends Field {
 export interface LinkField extends Field {
     type: 'link';
     value: string;
+}
+
+export interface SelectField extends Field {
+    type: 'select';
+    options: SelectOption[];
+}
+
+export interface SelectOption {
+    label: string;
+    value: string | number;
 }

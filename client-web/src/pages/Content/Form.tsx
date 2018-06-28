@@ -10,6 +10,7 @@ import TextAreaField from '../../components/TextAreaField';
 import ImageField from '../../components/ImageField';
 import NumberField from '../../components/NumberField';
 import LinkField from '../../components/LinkField';
+import SelectField from '../../components/SelectField';
 
 interface Props extends ContentModel.State, ContentModel.Dispatch, UiModel.State {
     location: Location;
@@ -109,6 +110,15 @@ const Field = (props: FieldProps) => {
                 <LinkField
                     label={props.fieldType.label}
                     value={props.value || ''}
+                    onChange={(value) => props.setValue({ key: props.fieldType.key, value })}
+                />
+            );
+        case 'select':
+            return (
+                <SelectField
+                    label={props.fieldType.label}
+                    value={props.value || ''}
+                    options={(props.fieldType as Types.SelectField).options}
                     onChange={(value) => props.setValue({ key: props.fieldType.key, value })}
                 />
             );

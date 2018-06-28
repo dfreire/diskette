@@ -1,10 +1,11 @@
 import * as React from 'react';
+import { SelectOption } from '../models/Types';
 const { Icon } = require('react-fa');
 
 interface Props {
     label: string;
     value: string;
-    valueMap: { [key: string]: string };
+    options: SelectOption[];
     onChange: { (value: string): void }
 }
 
@@ -13,8 +14,8 @@ const SelectField = (props: Props) => (
         <label className={classes.label}>{props.label}</label>
         <div className={classes.selectContainer}>
             <select className={classes.select} value={props.value} onChange={evt => props.onChange(evt.target.value)}>
-                {Object.keys(props.valueMap).map(key => (
-                    <option key={key} value={props.valueMap[key]}>{key}</option>
+                {props.options.map(option => (
+                    <option key={option.value} value={option.value}>{option.label}</option>
                 ))}
             </select>
             <div className={classes.dropdownIcon}>
