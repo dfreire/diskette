@@ -1,47 +1,39 @@
 export interface Content {
   type: string;
-  fields: object;
-  subDirs: string[];
+  fields: { [key: string]: any };
 }
 
 export interface ContentType {
   title: string;
   tabs: Tab[];
+  fields: Field[];
 }
 
 export interface Tab {
   title: string;
-  fields: Field[];
+  fieldKeys: string[];
 }
 
 export interface Field {
   label: string;
   key: string;
   isArrayUniqueKey?: boolean;
-  type:
-    | "text"
-    | "textarea"
-    | "number"
-    | "image"
-    | "link"
-    | "select"
-    | "group"
-    | "array";
+  type: 'text' | 'textarea' | 'number' | 'image' | 'link' | 'select' | 'group' | 'array';
 }
 
 export interface TextField extends Field {
-  type: "text";
+  type: 'text';
   value: string;
 }
 
 export interface TextAreaField extends Field {
-  type: "textarea";
+  type: 'textarea';
   rows?: number;
   value: string;
 }
 
 export interface NumberField extends Field {
-  type: "number";
+  type: 'number';
   value: number;
   decimalPlaces: number;
   decimalSeparator: string;
@@ -51,19 +43,19 @@ export interface NumberField extends Field {
 }
 
 export interface ImageField extends Field {
-  type: "image";
+  type: 'image';
   value: string;
   width: number;
   height: number;
 }
 
 export interface LinkField extends Field {
-  type: "link";
+  type: 'link';
   value: string;
 }
 
 export interface SelectField extends Field {
-  type: "select";
+  type: 'select';
   options: SelectOption[];
 }
 
@@ -73,11 +65,11 @@ export interface SelectOption {
 }
 
 export interface GroupField extends Field {
-  type: "group";
+  type: 'group';
   fields: Field[];
 }
 
 export interface FieldArray extends Field {
-  type: "array";
+  type: 'array';
   field: Field;
 }

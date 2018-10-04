@@ -13,172 +13,178 @@ import LinkField from '../../components/LinkField';
 import SelectField from '../../components/SelectField';
 
 interface Props extends ContentModel.State, ContentModel.Dispatch, UiModel.State {
-	location: Location;
+  location: Location;
 }
 
 const Form = (props: Props) => {
-	const { pathname } = props.location;
-	const messages = props.messages.contentPage;
-	const hasTabs = props.contentPage.contentType.tabs.length > 0;
+  const { pathname } = props.location;
+  const messages = props.messages.contentPage;
+  const hasTabs = props.contentPage.contentType.tabs.length > 0;
 
-	return (
-		hasTabs && (
-			<div className={classes.container}>
-				<div className={classes.tabsContainer}>
-					<Tabs titles={props.contentPage.contentType.tabs.map(tab => tab.title)}>
-						{props.contentPage.contentType.tabs.map((tab, i) => (
-							<Tab key={tab.title} {...props} tabIndex={i} />
-						))}
-					</Tabs>
-				</div>
-				<div className={classes.buttonsContainer}>
-					<button className={classes.saveButton} onClick={() => props.save({ pathname })}>
-						{messages.saveButton}
-					</button>
-					<button className={classes.cancelButton} onClick={() => props.load({ pathname })}>
-						{messages.cancelButton}
-					</button>
-				</div>
-			</div>
-		)
-	);
+  return (
+    hasTabs && (
+      <div className={classes.container}>
+        <div className={classes.tabsContainer}>
+          <Tabs titles={props.contentPage.contentType.tabs.map(tab => tab.title)}>
+            {props.contentPage.contentType.tabs.map((tab, i) => (
+              <Tab key={tab.title} {...props} tabIndex={i} />
+            ))}
+          </Tabs>
+        </div>
+        <div className={classes.buttonsContainer}>
+          <button className={classes.saveButton} onClick={() => props.save({ pathname })}>
+            {messages.saveButton}
+          </button>
+          <button className={classes.cancelButton} onClick={() => props.load({ pathname })}>
+            {messages.cancelButton}
+          </button>
+        </div>
+      </div>
+    )
+  );
 };
 
 const classes = {
-	container: '',
-	buttonsContainer: 'p-4 text-left bg-white _border-b text-sm',
-	saveButton: 'inline-block w-32 p-3 mr-1 rounded text-white bg-green hover:bg-green-light',
-	cancelButton: 'inline-block w-32 p-3 mx-1 rounded text-grey-dark bg-grey-lighter hover:text-grey-darkest',
-	tabsContainer: 'p-4',
+  container: '',
+  buttonsContainer: 'p-4 text-left bg-white _border-b text-sm',
+  saveButton: 'inline-block w-32 p-3 mr-1 rounded text-white bg-green hover:bg-green-light',
+  cancelButton: 'inline-block w-32 p-3 mx-1 rounded text-grey-dark bg-grey-lighter hover:text-grey-darkest',
+  tabsContainer: 'p-4',
 };
 
 interface TabProps extends Props {
-	tabIndex: number;
+  tabIndex: number;
 }
 
 const Tab = (props: TabProps) => {
-	const fieldTypes = props.contentPage.contentType.tabs[props.tabIndex].fields;
-	const fieldValues = props.contentPage.content.fields;
+  const { contentType, content } = props.contentPage;
+  const tab = contentType.tabs[props.tabIndex];
+  const fieldTypes = contentType.fields.filter(f => tab.fieldKeys.indexOf(f.key) >= 0);
+  const fieldValues = content.fields;
 
-	return (
-		<div>
-			{fieldTypes.map(fieldType => {
-				const key = fieldType.key;
-				const value = fieldValues[key];
-				return <Field {...props} key={key} fieldType={fieldType} value={value} />;
-			})}
-		</div>
-	);
+  return (
+    <div>
+      {fieldTypes.map(fieldType => {
+        const key = fieldType.key;
+        const value = fieldValues[key];
+        return <Field {...props} key={key} fieldType={fieldType} value={value} />;
+      })}
+    </div>
+  );
 };
 
 interface FieldProps extends Props {
-	fieldType: Types.Field;
-	value: any;
+  fieldType: Types.Field;
+  value: any;
 }
 
 const Field = (props: FieldProps) => {
-	switch (props.fieldType.type) {
-		case 'text':
-			return (
-				<TextField
-					label={props.fieldType.label}
-					value={props.value || ''}
-					onChange={value => props.setValue({ key: props.fieldType.key, value })}
-				/>
-			);
-		case 'textarea':
-			return (
-				<TextAreaField
-					label={props.fieldType.label}
-					value={props.value || ''}
-					rows={(props.fieldType as Types.TextAreaField).rows || 10}
-					onChange={value => props.setValue({ key: props.fieldType.key, value })}
-				/>
-			);
-		case 'number':
-			return (
-				<NumberField
-					label={props.fieldType.label}
-					value={props.value}
-					onChange={value => props.setValue({ key: props.fieldType.key, value })}
-				/>
-			);
-		case 'image':
-			return (
-				<ImageField
-					label={props.fieldType.label}
-					value={getImgSrc(props)}
-					onUpload={fileList =>
-						props.upload({ pathname: props.location.pathname, fileKey: props.fieldType.key, fileList })
-					}
-					onRemove={() => props.setValue({ key: props.fieldType.key, value: '' })}
-				/>
-			);
-		case 'link':
-			return (
-				<LinkField
-					label={props.fieldType.label}
-					value={props.value || ''}
-					onChange={value => props.setValue({ key: props.fieldType.key, value })}
-				/>
-			);
-		case 'select':
-			return (
-				<SelectField
-					label={props.fieldType.label}
-					value={props.value || ''}
-					options={(props.fieldType as Types.SelectField).options}
-					onChange={value => props.setValue({ key: props.fieldType.key, value })}
-				/>
-			);
-		default:
-			return (
-				<div>
-					<h1>{props.fieldType.key}</h1>
-					<div>{props.fieldType.label}</div>
-					<div>{JSON.stringify(props.value)}</div>
-				</div>
-			);
-	}
+  switch (props.fieldType.type) {
+    case 'text':
+      return (
+        <TextField
+          label={props.fieldType.label}
+          value={props.value || ''}
+          onChange={value => props.setValue({ key: props.fieldType.key, value })}
+        />
+      );
+    case 'textarea':
+      return (
+        <TextAreaField
+          label={props.fieldType.label}
+          value={props.value || ''}
+          rows={(props.fieldType as Types.TextAreaField).rows || 10}
+          onChange={value => props.setValue({ key: props.fieldType.key, value })}
+        />
+      );
+    case 'number':
+      return (
+        <NumberField
+          label={props.fieldType.label}
+          value={props.value}
+          onChange={value => props.setValue({ key: props.fieldType.key, value })}
+        />
+      );
+    case 'image':
+      return (
+        <ImageField
+          label={props.fieldType.label}
+          value={getImgSrc(props)}
+          onUpload={fileList =>
+            props.upload({
+              pathname: props.location.pathname,
+              fileKey: props.fieldType.key,
+              fileList,
+            })
+          }
+          onRemove={() => props.setValue({ key: props.fieldType.key, value: '' })}
+        />
+      );
+    case 'link':
+      return (
+        <LinkField
+          label={props.fieldType.label}
+          value={props.value || ''}
+          onChange={value => props.setValue({ key: props.fieldType.key, value })}
+        />
+      );
+    case 'select':
+      return (
+        <SelectField
+          label={props.fieldType.label}
+          value={props.value || ''}
+          options={(props.fieldType as Types.SelectField).options}
+          onChange={value => props.setValue({ key: props.fieldType.key, value })}
+        />
+      );
+    default:
+      return (
+        <div>
+          <h1>{props.fieldType.key}</h1>
+          <div>{props.fieldType.label}</div>
+          <div>{JSON.stringify(props.value)}</div>
+        </div>
+      );
+  }
 };
 
 function getImgSrc(props: FieldProps) {
-	const { value, location, fieldType } = props;
-	const { pathname } = location;
-	const { width, height } = fieldType as Types.ImageField;
+  const { value, location, fieldType } = props;
+  const { pathname } = location;
+  const { width, height } = fieldType as Types.ImageField;
 
-	let imgSrc = '';
+  let imgSrc = '';
 
-	if (value != null && value.length > 0) {
-		imgSrc = [
-			'/api/files',
-			...pathname
-				.split('/')
-				.filter(t => t.length > 0)
-				.slice(1),
-			value,
-		].join('/');
+  if (value != null && value.length > 0) {
+    imgSrc = [
+      '/api/files',
+      ...pathname
+        .split('/')
+        .filter(t => t.length > 0)
+        .slice(1),
+      value,
+    ].join('/');
 
-		imgSrc += '?' + queryString.stringify({ w: width, h: height });
-	}
+    imgSrc += '?' + queryString.stringify({ w: width, h: height });
+  }
 
-	return imgSrc;
+  return imgSrc;
 }
 
 const mapState = (models: { content: ContentModel.State; ui: UiModel.State }) => ({
-	messages: models.ui.messages,
-	contentPage: models.content.contentPage,
+  messages: models.ui.messages,
+  contentPage: models.content.contentPage,
 });
 
 const mapDispatch = (models: { content: ContentModel.Dispatch }) =>
-	({
-		setValue: models.content.setValue,
-		save: models.content.save,
-		load: models.content.load,
-		upload: models.content.upload,
-	} as any);
+  ({
+    setValue: models.content.setValue,
+    save: models.content.save,
+    load: models.content.load,
+    upload: models.content.upload,
+  } as any);
 
 export default connect(
-	mapState,
-	mapDispatch
+  mapState,
+  mapDispatch,
 )(Form as any);

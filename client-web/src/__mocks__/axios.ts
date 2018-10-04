@@ -1,8 +1,8 @@
 const defaults = {
-    headers: {
-        common: {}
-    }
-}
+  headers: {
+    common: {},
+  },
+};
 
 const get = jest.fn(() => Promise.resolve({ data: null }));
 
