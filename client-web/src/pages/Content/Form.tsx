@@ -11,6 +11,7 @@ import ImageField from '../../components/ImageField';
 import NumberField from '../../components/NumberField';
 import LinkField from '../../components/LinkField';
 import SelectField from '../../components/SelectField';
+import FilterSelectField from '../../components/FilterSelectField';
 
 interface Props extends ContentModel.State, ContentModel.Dispatch, UiModel.State {
   location: Location;
@@ -134,6 +135,15 @@ const Field = (props: FieldProps) => {
           label={props.fieldType.label}
           value={props.value || ''}
           options={(props.fieldType as Types.SelectField).options}
+          onChange={value => props.setValue({ key: props.fieldType.key, value })}
+        />
+      );
+    case 'filter_select':
+      return (
+        <FilterSelectField
+          label={props.fieldType.label}
+          value={props.value || ''}
+          filter={(props.fieldType as Types.FilterSelectField).filter}
           onChange={value => props.setValue({ key: props.fieldType.key, value })}
         />
       );

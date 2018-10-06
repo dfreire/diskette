@@ -18,7 +18,8 @@ export interface Field {
   label: string;
   key: string;
   isArrayUniqueKey?: boolean;
-  type: 'text' | 'textarea' | 'number' | 'image' | 'link' | 'select' | 'group' | 'array';
+  type: 'text' | 'textarea' | 'number' | 'image' | 'link' | 'select' | 'filter_select';
+  //  | 'group' | 'array';
 }
 
 export interface TextField extends Field {
@@ -64,12 +65,18 @@ export interface SelectOption {
   value: string | number;
 }
 
-export interface GroupField extends Field {
-  type: 'group';
-  fields: Field[];
+export interface FilterSelectField extends Field {
+  type: 'filter_select';
+  filter: string;
+  value: string | number;
 }
 
-export interface FieldArray extends Field {
-  type: 'array';
-  field: Field;
-}
+// export interface GroupField extends Field {
+//   type: 'group';
+//   fields: Field[];
+// }
+
+// export interface FieldArray extends Field {
+//   type: 'array';
+//   field: Field;
+// }

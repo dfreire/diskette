@@ -6,7 +6,6 @@ const router = Router();
 
 router.get('/', authenticate, async (req, res) => {
   try {
-    const id = req.params.id;
     const list = await model.list();
     res.json(list);
   } catch (err) {
