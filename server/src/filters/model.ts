@@ -15,6 +15,7 @@ interface Fns {
 
 export async function filter(name: string): Promise<string[]> {
   const fns: Fns = require(path.join(config.DK_QUERIES_DIR, name));
+
   const results = [];
 
   async function readDir(dir: string) {
@@ -27,7 +28,8 @@ export async function filter(name: string): Promise<string[]> {
       } else if (stat.isFile() && name.endsWith('.json')) {
         const doc = await readJson(_path);
         if (fns.filter(doc, _path)) {
-          results.push(fns.map(doc, _path));
+          const relativePath = path.relative(config.DK_CONTENT_DIR, _path);
+          results.push(fns.map(doc, relativePath));
         }
       }
     }
