@@ -1,17 +1,21 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-// import * as slug from 'slugg';
+import * as slug from 'slugg';
 import * as Modal from 'react-modal';
 import { AutoSizer, List } from 'react-virtualized';
 
 import TextField from './TextField';
+import { SelectOption } from '../models/Types';
 import * as UiModel from '../models/Ui';
 const { Icon } = require('react-fa');
 
 interface OwnProps {
+  filter: string;
   title: string;
   isModalOpen: boolean;
   closeModal: { (): void };
+  onSelect: { (option: SelectOption): void };
+  options: SelectOption[];
 }
 
 interface Props extends OwnProps, UiModel.State {}
@@ -23,14 +27,15 @@ interface State {
 class FilterSelectModal extends React.Component<Props, State> {
   state = {
     searchText: '',
-  };
+  } as State;
 
   render() {
-    console.log('this.props', this.props);
-    const { title, isModalOpen, closeModal } = this.props;
+    const { title, isModalOpen, closeModal, options } = this.props;
+    const { searchText } = this.state;
     const messages = this.props.messages.selectModal;
 
-    const { searchText } = this.state;
+    const _searchText = slug(searchText);
+    const listRows = options.filter(option => slug(option.label).indexOf(_searchText) >= 0);
 
     return (
       <Modal
@@ -49,16 +54,20 @@ class FilterSelectModal extends React.Component<Props, State> {
             </button>
           </div>
           <div className={classes.bodyContainer}>
-            <TextField label={messages.searchField} value={searchText} onChange={searchText => this.setState({ searchText })} />
+            <TextField
+              label={messages.searchField}
+              value={searchText}
+              onChange={searchText => this.setState({ searchText })}
+            />
             <AutoSizer disableHeight>
               {({ width }) => (
                 <List
                   className={classes.listContainer}
                   height={300}
                   width={width}
-                  rowCount={10}
+                  rowCount={listRows.length}
                   rowHeight={36}
-                  rowRenderer={this.renderRow}
+                  rowRenderer={listRowProps => this.renderListRow(listRows, listRowProps)}
                 />
               )}
             </AutoSizer>
@@ -68,21 +77,25 @@ class FilterSelectModal extends React.Component<Props, State> {
     );
   }
 
-  renderRow = (
-    {
-      /*
-    index, // Index of row
-    isScrolling, // The List is currently being scrolled
-    isVisible, // This row is visible within the List (eg it is not an overscanned row)
-    key, // Unique key within array of rendered rows
-    parent, // Reference to the parent List (instance)
-    style, // Style object to be applied to row (to position it);
-    // This must be passed through to the rendered row element.
-    */
+  renderListRow(
+    listRows: SelectOption[],
+    listRowProps: {
+      key: string;
+      index: number;
+      isScrolling: boolean;
+      isVisible: boolean;
+      style: object;
     },
-  ) => {
-    return <div className={classes.listRow}>Whatever</div>;
-  };
+  ) {
+    const { onSelect } = this.props;
+    const { key, index, style } = listRowProps;
+    const option = listRows[index];
+    return (
+      <div key={key} className={classes.listRow} style={style} onClick={() => onSelect(option)}>
+        {option.label}
+      </div>
+    );
+  }
 }
 
 const classes = {
@@ -90,10 +103,11 @@ const classes = {
   modelContent: 'rounded container max-w-md mx-auto bg-white',
   headerContainer: 'flex bg-blue-darker rounded-t',
   headerTitle: 'flex-1 text-white p-4',
-  headerCloseButton: 'w-8 h-8 rounded-tr p-2 rounded-bl text-grey hover:text-white hover:bg-blue-darkest font-thin font-mono',
+  headerCloseButton:
+    'w-8 h-8 rounded-tr p-2 rounded-bl text-grey hover:text-white hover:bg-blue-darkest font-thin font-mono',
   bodyContainer: 'p-6 pt-2',
-  listContainer: '',
-  listRow: 'my-2 p-2 w-full bg-grey-lighter border rounded border-dashed cursor-pointer text-sm',
+  listContainer: 'mt-2 rounded',
+  listRow: 'p-2 w-full border border-dashed cursor-pointer bg-grey-lightest hover:bg-green-lightest',
 };
 
 const mapState = (state: { ui: UiModel.State }) => ({

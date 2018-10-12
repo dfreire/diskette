@@ -1,14 +1,14 @@
 import axios from 'axios';
 import * as React from 'react';
-import { SelectOption } from '../models/Types';
 const { Icon } = require('react-fa');
+import { SelectOption } from '../models/Types';
 import FilterSelectModal from './FilterSelectModal';
 
 interface Props {
   label: string;
-  filter: string;
   value: string;
-  onChange: { (value: string): void };
+  onChange: { (value: string | number): void };
+  filter: string;
 }
 
 interface State {
@@ -30,19 +30,34 @@ class FilterSelectField extends React.Component<Props, State> {
     this.setState({ isModalOpen: false });
   };
 
+  onSelect = (option: SelectOption) => {
+    this.props.onChange(option.value);
+    this.setState({ isModalOpen: false });
+  };
+
   render() {
-    const { label, value, onChange } = this.props;
-    const { isModalOpen } = this.state;
+    const { label, value, filter } = this.props;
+    const { isModalOpen, options } = this.state;
+
+    const selectedOption = options.find(option => option.value === value);
+    const selectedOptionLabel = (selectedOption != null && selectedOption.label) || '';
 
     return (
       <div className={classes.field}>
-        <FilterSelectModal title={label} isModalOpen={isModalOpen} closeModal={this.closeModal} />
+        <FilterSelectModal
+          filter={filter}
+          title={label}
+          isModalOpen={isModalOpen}
+          closeModal={this.closeModal}
+          onSelect={this.onSelect}
+          options={options}
+        />
 
         <label className={classes.label}>{label}</label>
-        <div className={classes.inputContainer} onClick={this.openModal}>
-          <input className={classes.input} type="text" value={value} onChange={evt => onChange(evt.target.value)} disabled />
-          <div className={classes.dropdownIcon}>
-            <Icon name="search" />
+        <div className={classes.inputContainer}>
+          <input className={classes.input} type="text" value={selectedOptionLabel} onClick={this.openModal} disabled />
+          <div className={classes.dropdownIcon} onClick={() => this.props.onChange('')}>
+            <Icon name="times" />
           </div>
         </div>
       </div>
