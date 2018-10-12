@@ -24,6 +24,10 @@ export interface Messages {
     nameField: string;
     saveButton: string;
   };
+  selectModal: {
+    searchField: string;
+    selectButton: string;
+  };
 }
 
 export interface State {
@@ -56,6 +60,10 @@ export const INITIAL_STATE: State = {
       title: 'Update',
       nameField: 'Name',
       saveButton: 'Save',
+    },
+    selectModal: {
+      searchField: 'Search',
+      selectButton: 'Select',
     },
   },
 };
