@@ -14,6 +14,7 @@ import SelectField from '../../components/SelectField';
 import FilterSelectField from '../../components/FilterSelectField';
 
 interface Props extends ContentModel.State, ContentModel.Dispatch, UiModel.State {
+  history: any;
   location: Location;
 }
 
@@ -21,6 +22,7 @@ const Form = (props: Props) => {
   const { pathname } = props.location;
   const messages = props.messages.contentPage;
   const hasTabs = props.contentPage.contentType.tabs.length > 0;
+  console.log('props', props);
 
   return (
     hasTabs && (
@@ -36,7 +38,16 @@ const Form = (props: Props) => {
           <button className={classes.saveButton} onClick={() => props.save({ pathname })}>
             {messages.saveButton}
           </button>
-          <button className={classes.cancelButton} onClick={() => props.load({ pathname })}>
+          <button
+            className={classes.cancelButton}
+            onClick={() => {
+              const tokens = props.location.pathname.split('/');
+              const parent = tokens.slice(0, tokens.length - 1).join('/');
+              console.log('go', parent);
+              props.history.push(parent);
+              // props.history.goBack();
+            }}
+          >
             {messages.cancelButton}
           </button>
         </div>
