@@ -43,7 +43,6 @@ const Form = (props: Props) => {
             onClick={() => {
               const tokens = props.location.pathname.split('/');
               const parent = tokens.slice(0, tokens.length - 1).join('/');
-              console.log('go', parent);
               props.history.push(parent);
               // props.history.goBack();
             }}
