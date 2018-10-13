@@ -35,6 +35,7 @@ function getInitialState(): State {
         title: '',
         fields: [],
         tabs: [],
+        subTypes: [],
       },
       errorMessage: '',
     },
@@ -81,7 +82,10 @@ const effects = {
     }
   },
 
-  async upload(payload: { pathname: string; fileKey: string; fileList: FileList }, rootState: { content: State; user: UserModel.State }) {
+  async upload(
+    payload: { pathname: string; fileKey: string; fileList: FileList },
+    rootState: { content: State; user: UserModel.State },
+  ) {
     try {
       const { pathname, fileKey, fileList } = payload;
 

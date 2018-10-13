@@ -7,6 +7,7 @@ export interface ContentType {
   title: string;
   tabs: Tab[];
   fields: Field[];
+  subTypes: string[];
 }
 
 export interface Tab {

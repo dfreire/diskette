@@ -22,6 +22,7 @@ export interface Messages {
   updateDirModal: {
     title: string;
     nameField: string;
+    typeField: string;
     saveButton: string;
   };
   selectModal: {
@@ -59,6 +60,7 @@ export const INITIAL_STATE: State = {
     updateDirModal: {
       title: 'Update',
       nameField: 'Name',
+      typeField: 'Type',
       saveButton: 'Save',
     },
     selectModal: {

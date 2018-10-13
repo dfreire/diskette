@@ -4,11 +4,12 @@ import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautif
 import { connect } from 'react-redux';
 import * as UiModel from '../../models/Ui';
 import * as DirsModel from '../../models/Dirs';
+import * as ContentModel from '../../models/Content';
 import CreateDirModal from './CreateDirModal';
 import UpdateDirModal from './UpdateDirModal';
 const { Icon } = require('react-fa');
 
-interface Props extends UiModel.State, DirsModel.State, DirsModel.Dispatch {
+interface Props extends UiModel.State, ContentModel.State, DirsModel.State, DirsModel.Dispatch {
   location: Location;
 }
 
@@ -70,7 +71,10 @@ class Dirs extends React.Component<Props, State> {
                               </button>
                             )}
                             {deletingItemName !== dirItem.name && (
-                              <button className={classes.dirItemButton} onClick={() => this.setState({ deletingItemName: dirItem.name })}>
+                              <button
+                                className={classes.dirItemButton}
+                                onClick={() => this.setState({ deletingItemName: dirItem.name })}
+                              >
                                 <Icon name="trash" />
                               </button>
                             )}
@@ -80,7 +84,10 @@ class Dirs extends React.Component<Props, State> {
                               </button>
                             )}
                             {deletingItemName === dirItem.name && (
-                              <button className={classes.dirItemButton} onClick={() => this.setState({ deletingItemName: '' })}>
+                              <button
+                                className={classes.dirItemButton}
+                                onClick={() => this.setState({ deletingItemName: '' })}
+                              >
                                 <Icon name="ban" />
                               </button>
                             )}
@@ -131,13 +138,13 @@ const classes = {
   dirItemButton: 'px-1 text-grey hover:text-black',
 };
 
-const mapState = (models: { dirs: DirsModel.State; ui: UiModel.State }) => ({
-  messages: models.ui.messages,
+const mapState = (models: { dirs: DirsModel.State; content: ContentModel.State; ui: UiModel.State }) => ({
   dirItems: models.dirs.dirItems,
-  contentTypes: models.dirs.contentTypes,
   modalData: models.dirs.modalData,
   showCreateModal: models.dirs.showCreateModal,
   showUpdateModal: models.dirs.showUpdateModal,
+  contentPage: models.content.contentPage,
+  messages: models.ui.messages,
 });
 
 const mapDispatch = (models: { dirs: DirsModel.Dispatch }) =>

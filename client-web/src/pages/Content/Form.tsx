@@ -22,7 +22,6 @@ const Form = (props: Props) => {
   const { pathname } = props.location;
   const messages = props.messages.contentPage;
   const hasTabs = props.contentPage.contentType.tabs.length > 0;
-  console.log('props', props);
 
   return (
     hasTabs && (
