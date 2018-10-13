@@ -56,12 +56,14 @@ class FilterSelectField extends React.Component<Props, State> {
         <label className={classes.label}>{label}</label>
         <div className={classes.inputContainer}>
           <input className={classes.input} type="text" value={selectedOptionLabel} disabled />
-          <span className={classes.inputIcon} onClick={this.openModal}>
-            <Icon name="search" />
-          </span>
-          <span className={classes.inputIcon} onClick={() => this.props.onChange('')}>
-            <Icon name="times" />
-          </span>
+          <div className={classes.buttonsContainer}>
+            <button className={classes.button} onClick={this.openModal}>
+              <Icon name="search" />
+            </button>
+            <button className={classes.button} onClick={() => this.props.onChange('')}>
+              <Icon name="trash" />
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -76,14 +78,10 @@ class FilterSelectField extends React.Component<Props, State> {
 const classes = {
   field: 'w-full py-2',
   label: 'block pb-2 text-grey-darkest font-medium',
-  // inputContainer: 'relative block w-full border rounded bg-grey-lighter hover:bg-grey-lightest',
-  // input: 'appearance-none inline-block w-full absolute pin p-2 bg-transparent cursor-pointer',
-  // dropdownIcon: 'inline-block w-full text-right p-2 bg-transparent',
-
-  inputContainer: 'block w-full border rounded flex',
+  inputContainer: 'w-full border rounded relative',
   input: 'inline-block w-full bg-grey-lightest flex-1 p-2',
-  inputIcon:
-    'inline-block text-right border-l p-2 text-grey-darkest bg-grey-lighter hover:bg-grey-lightest cursor-pointer',
+  buttonsContainer: 'absolute pin-t pin-r bg-grey-lightest p-1 rounded-bl',
+  button: 'p-1 text-grey hover:text-black',
 };
 
 export default FilterSelectField;
