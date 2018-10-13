@@ -7,7 +7,7 @@ import contentRouter from './content/routes';
 import dirsRouter from './dirs/routes';
 import typesRouter from './types/routes';
 import filesRouter from './files/routes';
-import filtersRouter from './filters/routes';
+import queriesRouter from './queries/routes';
 
 const app = express();
 app.use(express.json());
@@ -17,7 +17,7 @@ app.use('/api/content', contentRouter);
 app.use('/api/dirs', dirsRouter);
 app.use('/api/types', typesRouter);
 app.use('/api/files', filesRouter);
-app.use('/api/filter', filtersRouter);
+app.use('/api/query', queriesRouter);
 
 const server = http.createServer(app);
 server.listen(config.DK_PORT);

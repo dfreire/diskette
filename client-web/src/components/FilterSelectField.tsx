@@ -68,7 +68,7 @@ class FilterSelectField extends React.Component<Props, State> {
   }
 
   async componentDidMount() {
-    const { data } = await axios.get(`/api/filter/${this.props.filter}`);
+    const { data } = await axios.get(`/api/query/${this.props.filter}`);
     this.setState({ options: data });
   }
 }

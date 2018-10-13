@@ -33,7 +33,7 @@ config.DK_UI_DIR = path.join(config.DK_DATA_DIR, 'ui');
 config.DK_USERS_DIR = path.join(config.DK_DATA_DIR, 'users');
 config.DK_CACHE_DIR = path.join(config.DK_DATA_DIR, 'cache');
 config.DK_UPLOAD_DIR = path.join(config.DK_DATA_DIR, 'upload');
-config.DK_QUERIES_DIR = path.join(config.DK_DATA_DIR, 'filters');
+config.DK_QUERIES_DIR = path.join(config.DK_DATA_DIR, 'queries');
 config.DK_CONTENT_DIR = path.join(config.DK_DATA_DIR, 'content');
 config.DK_CONTENT_TYPES_DIR = path.join(config.DK_DATA_DIR, 'types');
 

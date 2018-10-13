@@ -7,7 +7,7 @@ const router = Router();
 router.get('/:name', authenticate, async (req, res) => {
   try {
     const name = req.params.name;
-    const result = await model.filter(name);
+    const result = await model.query(name);
     res.json(result);
   } catch (err) {
     console.error(err);

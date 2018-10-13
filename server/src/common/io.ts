@@ -3,7 +3,7 @@ import * as fs from 'fs-extra';
 import { encrypt, decrypt } from 'crypto-buddy';
 import config from './config';
 
-export async function readJson(file: string) {
+export async function readJson(file: string): Promise<object> {
   if (config.DK_ENCRYPT_DATA) {
     const data = await fs.readFile(file);
     console.log('data', data);
