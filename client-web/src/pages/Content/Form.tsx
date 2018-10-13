@@ -11,7 +11,7 @@ import ImageField from '../../components/ImageField';
 import NumberField from '../../components/NumberField';
 import LinkField from '../../components/LinkField';
 import SelectField from '../../components/SelectField';
-import FilterSelectField from '../../components/FilterSelectField';
+import QuerySelectField from '../../components/QuerySelectField';
 
 interface Props extends ContentModel.State, ContentModel.Dispatch, UiModel.State {
   history: any;
@@ -148,12 +148,12 @@ const Field = (props: FieldProps) => {
           onChange={value => props.setValue({ key: props.fieldType.key, value })}
         />
       );
-    case 'filter_select':
+    case 'query_select':
       return (
-        <FilterSelectField
+        <QuerySelectField
           label={props.fieldType.label}
           value={props.value || ''}
-          filter={(props.fieldType as Types.FilterSelectField).filter}
+          query={(props.fieldType as Types.QuerySelectField).query}
           onChange={value => props.setValue({ key: props.fieldType.key, value })}
         />
       );

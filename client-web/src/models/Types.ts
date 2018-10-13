@@ -18,7 +18,7 @@ export interface Field {
   label: string;
   key: string;
   isArrayUniqueKey?: boolean;
-  type: 'text' | 'textarea' | 'number' | 'image' | 'link' | 'select' | 'filter_select';
+  type: 'text' | 'textarea' | 'number' | 'image' | 'link' | 'select' | 'query_select';
   //  | 'group' | 'array';
 }
 
@@ -65,9 +65,9 @@ export interface SelectOption {
   value: string | number;
 }
 
-export interface FilterSelectField extends Field {
-  type: 'filter_select';
-  filter: string;
+export interface QuerySelectField extends Field {
+  type: 'query_select';
+  query: string;
   value: string | number;
 }
 

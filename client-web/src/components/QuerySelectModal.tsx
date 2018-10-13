@@ -10,7 +10,7 @@ import * as UiModel from '../models/Ui';
 const { Icon } = require('react-fa');
 
 interface OwnProps {
-  filter: string;
+  query: string;
   title: string;
   isModalOpen: boolean;
   closeModal: { (): void };
@@ -24,7 +24,7 @@ interface State {
   searchText: string;
 }
 
-class FilterSelectModal extends React.Component<Props, State> {
+class QuerySelectModal extends React.Component<Props, State> {
   state = {
     searchText: '',
   } as State;
@@ -117,4 +117,4 @@ const mapState = (state: { ui: UiModel.State }) => ({
 export default connect(
   mapState,
   null,
-)(FilterSelectModal as any) as any;
+)(QuerySelectModal as any) as any;

@@ -2,13 +2,13 @@ import axios from 'axios';
 import * as React from 'react';
 const { Icon } = require('react-fa');
 import { SelectOption } from '../models/Types';
-import FilterSelectModal from './FilterSelectModal';
+import QuerySelectModal from './QuerySelectModal';
 
 interface Props {
   label: string;
   value: string;
   onChange: { (value: string | number): void };
-  filter: string;
+  query: string;
 }
 
 interface State {
@@ -16,7 +16,7 @@ interface State {
   options: SelectOption[];
 }
 
-class FilterSelectField extends React.Component<Props, State> {
+class QuerySelectField extends React.Component<Props, State> {
   state = {
     isModalOpen: false,
     options: [],
@@ -36,7 +36,7 @@ class FilterSelectField extends React.Component<Props, State> {
   };
 
   render() {
-    const { label, value, filter } = this.props;
+    const { label, value, query } = this.props;
     const { isModalOpen, options } = this.state;
 
     const selectedOption = options.find(option => option.value === value);
@@ -44,8 +44,8 @@ class FilterSelectField extends React.Component<Props, State> {
 
     return (
       <div className={classes.field}>
-        <FilterSelectModal
-          filter={filter}
+        <QuerySelectModal
+          query={query}
           title={label}
           isModalOpen={isModalOpen}
           closeModal={this.closeModal}
@@ -70,7 +70,7 @@ class FilterSelectField extends React.Component<Props, State> {
   }
 
   async componentDidMount() {
-    const { data } = await axios.get(`/api/query/${this.props.filter}`);
+    const { data } = await axios.get(`/api/query/${this.props.query}`);
     this.setState({ options: data });
   }
 }
@@ -84,4 +84,4 @@ const classes = {
   button: 'p-1 text-grey hover:text-black',
 };
 
-export default FilterSelectField;
+export default QuerySelectField;
