@@ -30,8 +30,8 @@ router.post('/*', authenticate, async (req, res) => {
 router.put('/*', authenticate, async (req, res) => {
   try {
     const location = req.params[0];
-    const { oldName, newName } = req.body;
-    await model.update(location, oldName, newName);
+    const { oldName, newName, contentType } = req.body;
+    await model.update(location, oldName, newName, contentType);
     res.sendStatus(200);
   } catch (err) {
     console.error(err);

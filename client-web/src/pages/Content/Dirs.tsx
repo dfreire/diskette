@@ -23,9 +23,10 @@ class Dirs extends React.Component<Props, State> {
   };
 
   render() {
-    const { location, dirItems, openCreateModal, openUpdateModal, remove } = this.props;
+    const { location, dirItems, openCreateModal, openUpdateModal, remove, contentPage } = this.props;
     const { deletingItemName } = this.state;
     const { pathname } = location;
+    const firstContentType = contentPage.contentType.subTypes[0];
 
     const onDragEnd = (result: DropResult) => {
       if (result.source != null && result.destination != null) {
@@ -40,7 +41,7 @@ class Dirs extends React.Component<Props, State> {
     return (
       <div className={classes.container}>
         <div className={classes.addButtonContainer}>
-          <button className={classes.addButton} onClick={openCreateModal}>
+          <button className={classes.addButton} onClick={() => openCreateModal({ firstContentType })}>
             <Icon name="plus" />
           </button>
         </div>
@@ -102,8 +103,8 @@ class Dirs extends React.Component<Props, State> {
           </Droppable>
         </DragDropContext>
 
-        <CreateDirModal {...this.props} />
-        <UpdateDirModal {...this.props} />
+        <CreateDirModal location={location} />
+        <UpdateDirModal location={location} />
       </div>
     );
   }
@@ -140,7 +141,6 @@ const classes = {
 
 const mapState = (models: { dirs: DirsModel.State; content: ContentModel.State; ui: UiModel.State }) => ({
   dirItems: models.dirs.dirItems,
-  modalData: models.dirs.modalData,
   showCreateModal: models.dirs.showCreateModal,
   showUpdateModal: models.dirs.showUpdateModal,
   contentPage: models.content.contentPage,

@@ -2,24 +2,22 @@ import axios from 'axios';
 import * as slug from 'slugg';
 import { logoutIf401, as } from './util';
 
-type DirItem = { name: string; friendlyName: string };
+export type DirItem = { name: string; friendlyName: string; contentType: string };
+
+type LoadedItem = { name: string; type: string };
 
 export interface State {
   dirItems: DirItem[];
-  contentTypes: string[];
+  modalDirItem: DirItem;
   showCreateModal: boolean;
   showUpdateModal: boolean;
-  modalData: {
-    dirItem: DirItem;
-    contentType: string;
-  };
 }
 
 export interface Dispatch {
   clear: { (): void };
-  onLoaded: { (payload: { dirNames: string[]; contentTypes: string[] }): void };
+  onLoaded: { (payload: { loadedItems: LoadedItem[] }): void };
   optimisticReorder: { (payload: { oldPos: number; newPos: number }): void };
-  openCreateModal: { (): void };
+  openCreateModal: { (payload: { firstContentType: string }): void };
   openUpdateModal: { (payload: { dirItem: DirItem }): void };
   closeModals: { (): void };
   setModalFriendlyName: { (payload: { friendlyName: string }): void };
@@ -34,13 +32,9 @@ export interface Dispatch {
 function getInitialState(): State {
   return {
     dirItems: [],
-    contentTypes: [],
+    modalDirItem: { name: '', friendlyName: '', contentType: '' },
     showCreateModal: false,
     showUpdateModal: false,
-    modalData: {
-      dirItem: { name: '', friendlyName: '' },
-      contentType: '',
-    },
   };
 }
 
@@ -49,16 +43,17 @@ const reducers = {
     return getInitialState();
   },
 
-  onLoaded(state: State, payload: { dirNames: string[]; contentTypes: string[] }): State {
-    const { dirNames, contentTypes } = payload;
-    const dirItems = dirNames.map(name => ({
-      name,
-      friendlyName: name
+  onLoaded(state: State, payload: { loadedItems: LoadedItem[] }): State {
+    const { loadedItems } = payload;
+    const dirItems = loadedItems.map(loadedItem => ({
+      name: loadedItem.name,
+      friendlyName: loadedItem.name
         .split('-')
         .slice(1)
         .join('-'),
+      contentType: loadedItem.type,
     }));
-    return { ...getInitialState(), dirItems, contentTypes };
+    return { ...getInitialState(), dirItems };
   },
 
   optimisticReorder(state: State, payload: { oldPos: number; newPos: number }): State {
@@ -69,16 +64,16 @@ const reducers = {
     return { ...state, dirItems };
   },
 
-  openCreateModal(state: State): State {
-    const dirItem = { name: '', friendlyName: '' };
-    const modalData = { dirItem, contentType: state.contentTypes[0] };
-    return { ...state, showCreateModal: true, showUpdateModal: false, modalData };
+  openCreateModal(state: State, payload: { firstContentType: string }): State {
+    const { firstContentType } = payload;
+    const { modalDirItem } = getInitialState();
+    modalDirItem.contentType = firstContentType;
+    return { ...state, showCreateModal: true, showUpdateModal: false, modalDirItem };
   },
 
   openUpdateModal(state: State, payload: { dirItem: DirItem }): State {
     const { dirItem } = payload;
-    const modalData = { dirItem, contentType: '' };
-    return { ...state, showCreateModal: false, showUpdateModal: true, modalData };
+    return { ...state, showCreateModal: false, showUpdateModal: true, modalDirItem: dirItem };
   },
 
   closeModals(state: State): State {
@@ -87,16 +82,14 @@ const reducers = {
 
   setModalFriendlyName(state: State, payload: { friendlyName: string }): State {
     const { friendlyName } = payload;
-    const modalData = { ...state.modalData };
-    modalData.dirItem.friendlyName = friendlyName;
-    return { ...state, modalData };
+    const modalDirItem = { ...state.modalDirItem, friendlyName };
+    return { ...state, modalDirItem };
   },
 
   setModalContentType(state: State, payload: { contentType: string }): State {
     const { contentType } = payload;
-    const modalData = { ...state.modalData };
-    modalData.contentType = contentType;
-    return { ...state, modalData };
+    const modalDirItem = { ...state.modalDirItem, contentType };
+    return { ...state, modalDirItem };
   },
 };
 
@@ -113,13 +106,10 @@ const effects = {
           .filter(t => t.length > 0)
           .slice(1),
       ].join('/');
-      const res1 = await axios.get(url);
-      const dirNames = res1.data;
+      const res = await axios.get(url);
+      const loadedItems = res.data;
 
-      const res2 = await axios.get('/api/types');
-      const contentTypes = res2.data;
-
-      as<Dispatch>(this).onLoaded({ dirNames, contentTypes });
+      as<Dispatch>(this).onLoaded({ loadedItems });
     } catch (err) {
       console.error(err);
       logoutIf401(err);
@@ -129,9 +119,8 @@ const effects = {
   async create(payload: { pathname: string }, rootState: { dirs: State }) {
     try {
       const { pathname } = payload;
-      const { modalData } = rootState.dirs;
-      const { friendlyName } = modalData.dirItem;
-      const { contentType } = modalData;
+      const { modalDirItem } = rootState.dirs;
+      const { friendlyName, contentType } = modalDirItem;
 
       // substitute '/content' by '/api/dirs' in from the beginning of the pathname
       const url = [
@@ -153,10 +142,10 @@ const effects = {
   async update(payload: { pathname: string }, rootState: { dirs: State }) {
     try {
       const { pathname } = payload;
-      const { modalData } = rootState.dirs;
-      const { friendlyName } = modalData.dirItem;
-      const oldName = modalData.dirItem.name;
-      const oldPos = modalData.dirItem.name.split('-')[0];
+      const { modalDirItem } = rootState.dirs;
+      const { name, friendlyName, contentType } = modalDirItem;
+      const oldName = name;
+      const oldPos = name.split('-')[0];
       const newName = `${oldPos}-${slug(friendlyName)}`;
 
       // substitute '/content' by '/api/dirs' in from the beginning of the pathname
@@ -167,7 +156,7 @@ const effects = {
           .filter(t => t.length > 0)
           .slice(1),
       ].join('/');
-      await axios.put(url, { oldName, newName });
+      await axios.put(url, { oldName, newName, contentType });
 
       as<Dispatch>(this).load({ pathname });
     } catch (err) {
@@ -176,7 +165,10 @@ const effects = {
     }
   },
 
-  async reorder(payload: { pathname: string; oldName: string; oldPos: number; newPos: number }, rootState: { dirs: State }) {
+  async reorder(
+    payload: { pathname: string; oldName: string; oldPos: number; newPos: number },
+    rootState: { dirs: State },
+  ) {
     try {
       const { pathname, oldName, oldPos, newPos } = payload;
       as<Dispatch>(this).optimisticReorder({ oldPos, newPos });

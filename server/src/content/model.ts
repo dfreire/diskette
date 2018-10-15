@@ -20,7 +20,7 @@ export async function remove(location: string) {
 
 export async function getByLocation(location: string): Promise<Content> {
   const dir = path.join(config.DK_CONTENT_DIR, location);
-  const content: Content = await readJson(path.join(dir, 'index.json'));
+  const content = (await readJson(path.join(dir, 'index.json'))) as Content;
   return content;
 }
 

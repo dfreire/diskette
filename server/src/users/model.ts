@@ -42,7 +42,7 @@ export async function setPassword(currentUsername: string, newPassword: string) 
 export async function getByUsername(username: string): Promise<User> {
   try {
     const file = path.join(config.DK_USERS_DIR, `${username}.json`);
-    const user: User = await readJson(file);
+    const user = (await readJson(file)) as User;
     return user;
   } catch (err) {
     return undefined;

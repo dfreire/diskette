@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import * as Modal from 'react-modal';
 import * as slug from 'slugg';
 const { Icon } = require('react-fa');
@@ -9,14 +10,41 @@ import TextField from '../../components/TextField';
 import SelectField from '../../components/SelectField';
 import ModalClasses from './ModalClasses';
 
-interface Props extends DirsModel.State, DirsModel.Dispatch, ContentModel.State, UiModel.State {
+interface OwnProps {
   location: Location;
 }
 
+interface StateToProps {
+  modalDirItem: DirsModel.DirItem;
+  showCreateModal: boolean;
+  subTypes: string[];
+  messages: {
+    title: string;
+    nameField: string;
+    typeField: string;
+    saveButton: string;
+  };
+}
+
+const mapState = (models: { dirs: DirsModel.State; content: ContentModel.State; ui: UiModel.State }): StateToProps => ({
+  modalDirItem: models.dirs.modalDirItem,
+  showCreateModal: models.dirs.showCreateModal,
+  subTypes: models.content.contentPage.contentType.subTypes,
+  messages: models.ui.messages.createDirModal,
+});
+
+interface DispatchToProps extends DirsModel.Dispatch {}
+
+const mapDispatch = (models: { dirs: DirsModel.Dispatch }): DispatchToProps => ({
+  ...models.dirs,
+});
+
+interface Props extends OwnProps, StateToProps, DispatchToProps {}
+
 const CreateDirModal = (props: Props) => {
-  const { pathname } = props.location;
-  const messages = props.messages.createDirModal;
-  const subTypes = props.contentPage.contentType.subTypes.map(subType => ({ label: subType, value: subType }));
+  const { messages, modalDirItem, location } = props;
+  const { pathname } = location;
+  const subTypeOptions = props.subTypes.map(subType => ({ label: subType, value: subType }));
 
   return (
     <Modal
@@ -37,20 +65,20 @@ const CreateDirModal = (props: Props) => {
         <div className={classes.formContainer}>
           <TextField
             label={messages.nameField}
-            value={props.modalData.dirItem.friendlyName}
+            value={modalDirItem.friendlyName}
             onChange={value => props.setModalFriendlyName({ friendlyName: value })}
           />
           <SelectField
             label={messages.typeField}
-            value={props.modalData.contentType}
-            options={subTypes}
+            value={modalDirItem.contentType}
+            options={subTypeOptions}
             onChange={value => props.setModalContentType({ contentType: value })}
           />
           <div className={classes.saveButtonContainer}>
             <button
               className={classes.saveButton}
               onClick={() => props.create({ pathname })}
-              disabled={slug(props.modalData.dirItem.friendlyName).length === 0}
+              disabled={slug(modalDirItem.friendlyName).length === 0}
             >
               {messages.saveButton}
             </button>
@@ -63,4 +91,7 @@ const CreateDirModal = (props: Props) => {
 
 const classes = ModalClasses;
 
-export default CreateDirModal;
+export default connect(
+  mapState,
+  mapDispatch as any,
+)(CreateDirModal) as any;

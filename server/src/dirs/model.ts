@@ -2,43 +2,74 @@ import * as path from 'path';
 import * as fs from 'fs-extra';
 import config from '../common/config';
 import * as slug from 'slugg';
-import { save } from '../content/model';
+import { readJson } from '../common/io';
+import { getByLocation, save } from '../content/model';
+import { Content } from '../content/model';
 
 fs.mkdirpSync(config.DK_CONTENT_DIR);
 
-export async function list(location: string): Promise<string[]> {
+export async function list(location: string): Promise<{ name: string; type: string }[]> {
   const dir = path.join(config.DK_CONTENT_DIR, location);
 
   const list = [];
 
-  fs.readdirSync(dir).forEach(subDir => {
-    fs.statSync(path.join(dir, subDir)).isDirectory() && list.push(subDir);
-  });
+  for (let subDir of fs.readdirSync(dir)) {
+    const subDirPath = path.join(dir, subDir);
+    const stat = fs.statSync(subDirPath);
+    if (stat.isDirectory()) {
+      const doc: any = await readJson(path.join(subDirPath, 'index.json'));
+      list.push({
+        name: subDir,
+        type: doc.type,
+      });
+    }
+  }
 
   list.sort((a, b) => {
-    const a1 = parseInt(a.split('-')[0]);
-    const b1 = parseInt(b.split('-')[0]);
+    const a1 = parseInt(a.name.split('-')[0]);
+    const b1 = parseInt(b.name.split('-')[0]);
     return a1 - b1;
   });
 
   return list;
 }
 
+async function getDirNames(location: string): Promise<string[]> {
+  const dir = path.join(config.DK_CONTENT_DIR, location);
+
+  const dirNames = [];
+
+  for (let subDir of fs.readdirSync(dir)) {
+    const subDirPath = path.join(dir, subDir);
+    const stat = fs.statSync(subDirPath);
+    if (stat.isDirectory()) {
+      dirNames.push(subDir);
+    }
+  }
+
+  return dirNames;
+}
+
 export async function create(location: string, friendlyName: string, contentType: string) {
-  const dirs = await list(location);
+  const dirs = await getDirNames(location);
   const name = slug(`${dirs.length}_${friendlyName}`);
   await fs.mkdirp(path.join(config.DK_CONTENT_DIR, location, name));
   await save(path.join(location, name), { type: contentType, fields: {} });
 }
 
-export async function update(location: string, oldName: string, newName: string) {
+export async function update(location: string, oldName: string, newName: string, contentType?: string) {
+  if (contentType != null) {
+    const doc = (await getByLocation(path.join(location, oldName))) as Content;
+    await save(path.join(location, oldName), { ...doc, type: contentType });
+  }
+
   const oldPos = parseInt(oldName.split('-')[0]);
   const newPos = parseInt(newName.split('-')[0]);
 
   if (oldPos === newPos) {
     await fs.move(path.join(config.DK_CONTENT_DIR, location, oldName), path.join(config.DK_CONTENT_DIR, location, newName));
   } else {
-    const dirs = await list(location);
+    const dirs = await getDirNames(location);
     dirs.splice(oldPos, 1);
     dirs.splice(newPos, 0, oldName);
     await sortAndRenameDirs(location, dirs);
@@ -52,7 +83,7 @@ export async function remove(location: string) {
 
   await fs.remove(path.join(config.DK_CONTENT_DIR, _location, name));
 
-  const dirs = await list(_location);
+  const dirs = await getDirNames(_location);
   await sortAndRenameDirs(_location, dirs);
 }
 

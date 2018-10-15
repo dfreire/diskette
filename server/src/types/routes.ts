@@ -4,16 +4,6 @@ import * as model from './model';
 
 const router = Router();
 
-router.get('/', authenticate, async (req, res) => {
-  try {
-    const list = await model.list();
-    res.json(list);
-  } catch (err) {
-    console.error(err);
-    res.sendStatus(500);
-  }
-});
-
 router.get('/:id', authenticate, async (req, res) => {
   try {
     const id = req.params.id;
