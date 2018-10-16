@@ -47,6 +47,12 @@ async function getDirNames(location: string): Promise<string[]> {
     }
   }
 
+  dirNames.sort((a, b) => {
+    const a1 = parseInt(a.split('-')[0]);
+    const b1 = parseInt(b.split('-')[0]);
+    return a1 - b1;
+  });
+
   return dirNames;
 }
 
