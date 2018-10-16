@@ -13,24 +13,27 @@ const Login = (props: Props) => {
     props.login();
   };
 
+  const { username, password } = props.loginPage;
+  const { isLogginIn } = props;
   const messages = props.messages.loginPage;
+  console.log('isLogginIn', isLogginIn);
 
   return (
     <div className={classes.container}>
       <form>
         <TextField
           label={messages.usernameField}
-          value={props.loginPage.username}
+          value={username}
           onChange={value => props.setValue({ key: 'username', value })}
         />
         <PasswordField
           label={messages.passwordField}
-          value={props.loginPage.password}
+          value={password}
           onChange={value => props.setValue({ key: 'password', value })}
         />
         <div className={classes.buttonContainer}>
-          <button className={classes.button} onClick={onClickedLogin}>
-            {messages.loginButton}
+          <button className={classes.button} onClick={evt => !isLogginIn && onClickedLogin(evt)}>
+            {isLogginIn ? <span className="loading bullet" /> : messages.loginButton}
           </button>
         </div>
       </form>
@@ -47,6 +50,7 @@ const classes = {
 const mapState = (models: { user: UserModel.State; ui: UiModel.State }) => ({
   messages: models.ui.messages,
   loginPage: models.user.loginPage,
+  isLogginIn: models.user.isLogginIn,
 });
 
 const mapDispatch = (models: { user: UserModel.Dispatch }) =>

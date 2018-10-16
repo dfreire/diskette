@@ -9,6 +9,7 @@ export interface State {
     contentType: Types.ContentType;
     errorMessage: string;
   };
+  isSaving: boolean;
 }
 
 export interface Dispatch {
@@ -18,6 +19,7 @@ export interface Dispatch {
     (payload: { content: Types.Content; contentType: Types.ContentType }): void;
   };
   setValue: { (payload: { key: string; value: any }): void };
+  setIsSaving: { (payload: { isSaving: boolean }): void };
   upload: {
     (payload: { pathname: string; fileKey: string; fileList: FileList }): void;
   };
@@ -39,6 +41,7 @@ function getInitialState(): State {
       },
       errorMessage: '',
     },
+    isSaving: false,
   };
 }
 
@@ -62,6 +65,11 @@ const reducers = {
     const contentPage = { ...state.contentPage };
     contentPage.content.fields[key] = value;
     return { ...state, contentPage };
+  },
+
+  setIsSaving(state: State, payload: { isSaving: boolean }) {
+    const { isSaving } = payload;
+    return { ...state, isSaving };
   },
 };
 
@@ -117,14 +125,20 @@ const effects = {
   },
 
   async save(payload: { pathname: string }, rootState: { content: State; user: UserModel.State }) {
+    const { pathname } = payload;
+    const { content } = rootState.content.contentPage;
+    as<Dispatch>(this).setIsSaving({ isSaving: true });
+
     try {
-      const { pathname } = payload;
-      const { content } = rootState.content.contentPage;
       await axios.post(`/api${pathname}`, content);
     } catch (err) {
       console.error(err);
       logoutIf401(err);
     }
+
+    setTimeout(() => {
+      as<Dispatch>(this).setIsSaving({ isSaving: false });
+    }, 500);
   },
 };
 

@@ -22,6 +22,7 @@ const Form = (props: Props) => {
   const { pathname } = props.location;
   const messages = props.messages.contentPage;
   const hasTabs = props.contentPage.contentType.tabs.length > 0;
+  const { isSaving } = props;
 
   return (
     hasTabs && (
@@ -34,8 +35,8 @@ const Form = (props: Props) => {
           </Tabs>
         </div>
         <div className={classes.buttonsContainer}>
-          <button className={classes.saveButton} onClick={() => props.save({ pathname })}>
-            {messages.saveButton}
+          <button className={classes.saveButton} onClick={() => !isSaving && props.save({ pathname })}>
+            {isSaving ? <span className="loading bullet" /> : messages.saveButton}
           </button>
           <button
             className={classes.cancelButton}
@@ -193,6 +194,7 @@ function getImgSrc(props: FieldProps) {
 const mapState = (models: { content: ContentModel.State; ui: UiModel.State }) => ({
   messages: models.ui.messages,
   contentPage: models.content.contentPage,
+  isSaving: models.content.isSaving,
 });
 
 const mapDispatch = (models: { content: ContentModel.Dispatch }) =>

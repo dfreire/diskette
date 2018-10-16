@@ -19,6 +19,7 @@
     "redux": "^4.0.0",
     "slugg": "^1.2.1",
     "tailwindcss": "^0.5.2",
+    "text-spinners": "^1.0.5",
     "validator": "^10.2.0"
   },
   "scripts": {

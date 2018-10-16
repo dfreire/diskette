@@ -13,10 +13,13 @@ export interface State {
     password: string;
     errorMessage: string;
   };
+
+  isLogginIn: boolean;
 }
 
 export interface Dispatch {
   setValue: { (payload: { key: 'username' | 'password'; value: string }): void };
+  setIsLogginIn: { (payload: { isLogginIn: boolean }): void };
   login: { (): void };
   onLoginError: { (): void };
   logout: { (): void };
@@ -30,6 +33,8 @@ export const INITIAL_STATE: State = {
     password: '',
     errorMessage: '',
   },
+
+  isLogginIn: false,
 };
 
 const reducers = {
@@ -45,23 +50,33 @@ const reducers = {
     loginPage.errorMessage = 'Access Denied';
     return { ...state, loginPage };
   },
+
+  setIsLogginIn(state: State, payload: { isLogginIn: boolean }) {
+    const { isLogginIn } = payload;
+    return { ...state, isLogginIn };
+  },
 };
 
 const effects = {
   async login(payload: {}, rootState: { user: State }) {
-    try {
-      const { username, password } = rootState.user.loginPage;
-      const res = await axios.post('/api/users/login', { username, password });
-      if (res.status === 200) {
-        const sessionToken = res.data;
-        localStorage.setItem('sessionToken', sessionToken);
-        window.location.assign('/content');
+    as<Dispatch>(this).setIsLogginIn({ isLogginIn: true });
+    const { username, password } = rootState.user.loginPage;
+
+    setTimeout(async () => {
+      try {
+        const res = await axios.post('/api/users/login', { username, password });
+        if (res.status === 200) {
+          const sessionToken = res.data;
+          localStorage.setItem('sessionToken', sessionToken);
+          window.location.assign('/content');
+        }
+      } catch (err) {
+        // console.error(err);
+        // console.log('err.response', err.response);
+        as<Dispatch>(this).setIsLogginIn({ isLogginIn: false });
+        as<Dispatch>(this).onLoginError();
       }
-    } catch (err) {
-      // console.error(err);
-      // console.log('err.response', err.response);
-      as<Dispatch>(this).onLoginError();
-    }
+    }, 500);
   },
 
   logout(payload: {}, rootState: { user: State }) {
