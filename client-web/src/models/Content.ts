@@ -20,9 +20,7 @@ export interface Dispatch {
   };
   setValue: { (payload: { key: string; value: any }): void };
   setIsSaving: { (payload: { isSaving: boolean }): void };
-  upload: {
-    (payload: { pathname: string; fileKey: string; fileList: FileList }): void;
-  };
+  upload: { (payload: { pathname: string; fileKey: string; fileList: FileList }): void };
   save: { (payload: { pathname: string }): void };
 }
 

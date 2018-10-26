@@ -18,9 +18,7 @@ export interface Tab {
 export interface Field {
   label: string;
   key: string;
-  isArrayUniqueKey?: boolean;
-  type: 'text' | 'textarea' | 'number' | 'image' | 'link' | 'select' | 'query_select';
-  //  | 'group' | 'array';
+  type: 'text' | 'textarea' | 'number' | 'image' | 'link' | 'select' | 'query_select' | 'array';
 }
 
 export interface TextField extends Field {
@@ -72,12 +70,8 @@ export interface QuerySelectField extends Field {
   value: string | number;
 }
 
-// export interface GroupField extends Field {
-//   type: 'group';
-//   fields: Field[];
-// }
-
-// export interface FieldArray extends Field {
-//   type: 'array';
-//   field: Field;
-// }
+export interface ArrayField extends Field {
+  type: 'array';
+  fields: Field[];
+  value: object[];
+}

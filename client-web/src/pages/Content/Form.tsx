@@ -70,98 +70,136 @@ interface TabProps extends Props {
 const Tab = (props: TabProps) => {
   const { contentType, content } = props.contentPage;
   const tab = contentType.tabs[props.tabIndex];
-  const fieldTypes = contentType.fields.filter(f => tab.fieldKeys.indexOf(f.key) >= 0);
-  const fieldValues = content.fields;
+
+  const fields = tab.fieldKeys.map(item => {
+    const tokens = item.split(':');
+    if (tokens.length === 1) {
+      const key = item;
+      return contentType.fields.find(f => f.key === key);
+    } else {
+      const key = tokens[0];
+      const subKeys = tokens[1].split(',');
+      const field = contentType.fields.find(f => f.key === key) as Types.ArrayField;
+      return {
+        ...field,
+        fields: field.fields.filter(f => subKeys.indexOf(f.key) >= 0),
+      };
+    }
+  }) as Types.Field[];
 
   return (
     <div>
-      {fieldTypes.map(fieldType => {
-        const key = fieldType.key;
-        const value = fieldValues[key];
-        return <Field {...props} key={key} fieldType={fieldType} value={value} />;
-      })}
+      {fields.map(field => (
+        <Field {...props} key={field.key} field={field} value={content.fields[field.key]} />
+      ))}
     </div>
   );
 };
 
-interface FieldProps extends Props {
-  fieldType: Types.Field;
+const ArrayField = (props: FieldProps) => {
+  const arrayField = props.field as Types.ArrayField;
+  const arrayValue = (props.value || [{}]) as object[];
+
+  return (
+    <React.Fragment>
+      <h2 className="mt-3 mb-1">{arrayField.label}</h2>
+      {arrayValue.map((item, i) => (
+        <div className="border rounded p-2" key={`${arrayField.key}.${i}`}>
+          {arrayField.fields.map(field => {
+            const value = (item || {})[field.key];
+            return <Field {...props} key={field.key} field={field} value={value} />;
+          })}
+          <p>{JSON.stringify(arrayField)}</p>
+          <p>{JSON.stringify(arrayValue)}</p>
+        </div>
+      ))}
+    </React.Fragment>
+  );
+};
+
+interface FieldProps {
+  setValue: { (payload: { key: string; value: any }): void };
+  upload: { (payload: { pathname: string; fileKey: string; fileList: FileList }): void };
+  location: Location;
+  field: Types.Field;
   value: any;
 }
 
 const Field = (props: FieldProps) => {
-  switch (props.fieldType.type) {
+  switch (props.field.type) {
     case 'text':
       return (
         <TextField
-          label={props.fieldType.label}
+          label={props.field.label}
           value={props.value || ''}
-          onChange={value => props.setValue({ key: props.fieldType.key, value })}
+          onChange={value => props.setValue({ key: props.field.key, value })}
         />
       );
     case 'textarea':
       return (
         <TextAreaField
-          label={props.fieldType.label}
+          label={props.field.label}
           value={props.value || ''}
-          rows={(props.fieldType as Types.TextAreaField).rows || 10}
-          onChange={value => props.setValue({ key: props.fieldType.key, value })}
+          rows={(props.field as Types.TextAreaField).rows || 10}
+          onChange={value => props.setValue({ key: props.field.key, value })}
         />
       );
     case 'number':
       return (
         <NumberField
-          label={props.fieldType.label}
+          label={props.field.label}
           value={props.value}
-          onChange={value => props.setValue({ key: props.fieldType.key, value })}
+          onChange={value => props.setValue({ key: props.field.key, value })}
         />
       );
     case 'image':
       return (
         <ImageField
-          label={props.fieldType.label}
+          label={props.field.label}
           value={getImgSrc(props)}
           onUpload={fileList =>
             props.upload({
               pathname: props.location.pathname,
-              fileKey: props.fieldType.key,
+              fileKey: props.field.key,
               fileList,
             })
           }
-          onRemove={() => props.setValue({ key: props.fieldType.key, value: '' })}
+          onRemove={() => props.setValue({ key: props.field.key, value: '' })}
         />
       );
     case 'link':
       return (
         <LinkField
-          label={props.fieldType.label}
+          label={props.field.label}
           value={props.value || ''}
-          onChange={value => props.setValue({ key: props.fieldType.key, value })}
+          onChange={value => props.setValue({ key: props.field.key, value })}
         />
       );
     case 'select':
       return (
         <SelectField
-          label={props.fieldType.label}
+          label={props.field.label}
           value={props.value || ''}
-          options={(props.fieldType as Types.SelectField).options}
-          onChange={value => props.setValue({ key: props.fieldType.key, value })}
+          options={(props.field as Types.SelectField).options}
+          onChange={value => props.setValue({ key: props.field.key, value })}
         />
       );
     case 'query_select':
       return (
         <QuerySelectField
-          label={props.fieldType.label}
+          label={props.field.label}
           value={props.value || ''}
-          query={(props.fieldType as Types.QuerySelectField).query}
-          onChange={value => props.setValue({ key: props.fieldType.key, value })}
+          query={(props.field as Types.QuerySelectField).query}
+          onChange={value => props.setValue({ key: props.field.key, value })}
         />
       );
+    case 'array':
+      return <ArrayField {...props} />;
     default:
       return (
         <div>
-          <h1>{props.fieldType.key}</h1>
-          <div>{props.fieldType.label}</div>
+          <h1>{props.field.key}</h1>
+          <div>{props.field.label}</div>
           <div>{JSON.stringify(props.value)}</div>
         </div>
       );
@@ -169,9 +207,9 @@ const Field = (props: FieldProps) => {
 };
 
 function getImgSrc(props: FieldProps) {
-  const { value, location, fieldType } = props;
+  const { value, location, field } = props;
   const { pathname } = location;
-  const { width, height } = fieldType as Types.ImageField;
+  const { width, height } = field as Types.ImageField;
 
   let imgSrc = '';
 
