@@ -7,6 +7,7 @@ import * as Types from '../../models/Types';
 import Tabs from '../../components/Tabs';
 import TextField from '../../components/TextField';
 import TextAreaField from '../../components/TextAreaField';
+import FileField from '../../components/FileField';
 import ImageField from '../../components/ImageField';
 import NumberField from '../../components/NumberField';
 import LinkField from '../../components/LinkField';
@@ -24,6 +25,8 @@ const Form = (props: Props) => {
   const messages = props.messages.contentPage;
   const hasTabs = props.contentPage.contentType.tabs.length > 0;
   const { isSaving } = props;
+
+  console.log('values', props.contentPage.content.fields);
 
   return (
     hasTabs && (
@@ -175,7 +178,22 @@ const Field = (props: FieldProps) => {
       return (
         <ImageField
           label={props.field.label}
-          value={getImgSrc(props)}
+          value={getFileLink(props)}
+          onUpload={fileList =>
+            props.upload({
+              pathname: props.location.pathname,
+              fieldKey: props.field.key,
+              fileList,
+            })
+          }
+          onRemove={() => props.setValue({ key: props.field.key, value: '' })}
+        />
+      );
+    case 'file':
+      return (
+        <FileField
+          label={props.field.label}
+          value={getFileLink(props)}
           onUpload={fileList =>
             props.upload({
               pathname: props.location.pathname,
@@ -225,15 +243,14 @@ const Field = (props: FieldProps) => {
   }
 };
 
-function getImgSrc(props: FieldProps) {
+function getFileLink(props: FieldProps) {
   const { value, location, field } = props;
   const { pathname } = location;
-  const { width, height } = field as Types.ImageField;
 
-  let imgSrc = '';
+  let link = '';
 
   if (value != null && value.length > 0) {
-    imgSrc = [
+    link = [
       '/api/files',
       ...pathname
         .split('/')
@@ -242,10 +259,14 @@ function getImgSrc(props: FieldProps) {
       value,
     ].join('/');
 
-    imgSrc += '?' + queryString.stringify({ w: width, h: height });
+    if (field.type === 'image') {
+      const { width, height } = field as Types.ImageField;
+      link += '?' + queryString.stringify({ w: width, h: height });
+    }
   }
 
-  return imgSrc;
+  console.log('link', link);
+  return link;
 }
 
 const mapState = (models: { content: ContentModel.State; ui: UiModel.State }) => ({

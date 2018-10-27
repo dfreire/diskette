@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as validator from 'validator';
+import { isLink } from './util';
 const { Icon } = require('react-fa');
 
 interface Props {
@@ -12,7 +12,12 @@ const LinkField = (props: Props) => (
   <div className={classes.field}>
     <label className={classes.label}>{props.label}</label>
     <div className={classes.inputContainer}>
-      <input className={classes.input} type="text" value={props.value} onChange={evt => props.onChange(evt.target.value)} />
+      <input
+        className={classes.input}
+        type="text"
+        value={props.value}
+        onChange={evt => props.onChange(evt.target.value)}
+      />
       {isLink(props.value) && (
         <a className={classes.linkIcon} href={props.value}>
           <Icon name="external-link" />
@@ -29,9 +34,5 @@ const classes = {
   input: 'inline-block w-full bg-transparent flex-1 p-2',
   linkIcon: 'inline-block text-right bg-grey-lightest border-l p-2 text-black no-underline',
 };
-
-function isLink(s: string) {
-  return validator.isURL(s) || s.startsWith('http://localhost') || s.startsWith('https://localhost');
-}
 
 export default LinkField;

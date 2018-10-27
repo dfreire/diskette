@@ -1,3 +1,4 @@
+import { last } from 'lodash';
 import * as React from 'react';
 import { isLink } from './util';
 const { Icon } = require('react-fa');
@@ -9,24 +10,26 @@ interface Props {
   onRemove: { (): void };
 }
 
-const ImageField = (props: Props) => {
+const FileField = (props: Props) => {
   let fileInput: HTMLInputElement | null;
 
   const onUpload = () => {
     fileInput != null && fileInput.click();
   };
 
-  const { value } = props;
-  const href = (value.split('?') || '')[0];
+  const { label, value } = props;
+  const filename = last((value || '').split('/'));
+
+  console.log('process.env', process.env);
 
   return (
     <div className={classes.field}>
-      <label className={classes.label}>{props.label}</label>
-      <div className={classes.imageContainer}>
-        <img src={props.value} />
+      <label className={classes.label}>{label}</label>
+      <div className={classes.inputContainer}>
+        <input className={classes.input} type="text" value={filename} disabled />
         <div className={classes.buttonsContainer}>
-          {isLink(href) && (
-            <a className={classes.button} href={href}>
+          {isLink(props.value) && (
+            <a className={classes.button} href={value}>
               <Icon name="external-link" />
             </a>
           )}
@@ -53,9 +56,10 @@ const ImageField = (props: Props) => {
 const classes = {
   field: 'w-full py-2',
   label: 'block pb-2 text-grey-darkest font-medium',
-  imageContainer: 'p-2 w-full border rounded relative',
-  buttonsContainer: 'absolute pin-t pin-r bg-white p-1 rounded-bl',
+  inputContainer: 'w-full border rounded relative',
+  input: 'inline-block w-full bg-grey-lightest flex-1 p-2',
+  buttonsContainer: 'absolute pin-t pin-r bg-grey-lightest p-1 rounded-bl',
   button: 'p-1 text-grey hover:text-black',
 };
 
-export default ImageField;
+export default FileField;
