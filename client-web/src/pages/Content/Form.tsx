@@ -135,7 +135,7 @@ const ArrayField = (props: FieldProps) => {
                       ref={provided.innerRef}
                       {...provided.draggableProps as any}
                       {...provided.dragHandleProps as any}
-                      className="border rounded p-2 mt-2 relative"
+                      className="bg-white border rounded p-2 mt-2 relative"
                     >
                       <div className="absolute pin-t pin-r">
                         <button
