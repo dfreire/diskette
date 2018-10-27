@@ -104,17 +104,19 @@ const ArrayField = (props: FieldProps) => {
 
   return (
     <React.Fragment>
-      <h2 className="mt-3 mb-1">{arrayField.label}</h2>
+      <h3 className="mt-3 mb-1">{arrayField.label}</h3>
       {arrayValue.map((item, i) => (
-        <div className="border rounded p-2 my-2" key={`${arrayField.key}.${i}`}>
-          <button
-            className="p-1 text-grey hover:text-black"
-            onClick={() => {
-              props.setValue({ key: `${arrayField.key}[${i}]`, value: null });
-            }}
-          >
-            <Icon name="minus" />
-          </button>
+        <div className="border rounded p-2 mt-2 relative" key={`${arrayField.key}.${i}`}>
+          <div className="absolute pin-t pin-r">
+            <button
+              className="p-1 text-grey hover:text-red"
+              onClick={() => {
+                props.setValue({ key: `${arrayField.key}[${i}]`, value: null });
+              }}
+            >
+              <Icon name="minus-circle" />
+            </button>
+          </div>
           {arrayField.fields.map(field => {
             const value = (item || {})[field.key];
             const _field = {
@@ -125,14 +127,16 @@ const ArrayField = (props: FieldProps) => {
           })}
         </div>
       ))}
-      <button
-        className="p-1 text-grey hover:text-black"
-        onClick={() => {
-          props.setValue({ key: `${arrayField.key}[${arrayValue.length}]`, value: {} });
-        }}
-      >
-        <Icon name="plus" />
-      </button>
+      <div className="text-right">
+        <button
+          className="p-1 text-grey hover:text-green"
+          onClick={() => {
+            props.setValue({ key: `${arrayField.key}[${arrayValue.length}]`, value: {} });
+          }}
+        >
+          <Icon name="plus-circle" />
+        </button>
+      </div>
     </React.Fragment>
   );
 };
