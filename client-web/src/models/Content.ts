@@ -1,3 +1,4 @@
+import { set } from 'lodash';
 import axios from 'axios';
 import * as UserModel from './User';
 import * as Types from './Types';
@@ -20,7 +21,7 @@ export interface Dispatch {
   };
   setValue: { (payload: { key: string; value: any }): void };
   setIsSaving: { (payload: { isSaving: boolean }): void };
-  upload: { (payload: { pathname: string; fileKey: string; fileList: FileList }): void };
+  upload: { (payload: { pathname: string; fieldKey: string; fileList: FileList }): void };
   save: { (payload: { pathname: string }): void };
 }
 
@@ -61,7 +62,7 @@ const reducers = {
   setValue(state: State, payload: { key: string; value: any }) {
     const { key, value } = payload;
     const contentPage = { ...state.contentPage };
-    contentPage.content.fields[key] = value;
+    set(contentPage.content.fields, key, value);
     return { ...state, contentPage };
   },
 
@@ -89,11 +90,11 @@ const effects = {
   },
 
   async upload(
-    payload: { pathname: string; fileKey: string; fileList: FileList },
+    payload: { pathname: string; fieldKey: string; fileList: FileList },
     rootState: { content: State; user: UserModel.State },
   ) {
     try {
-      const { pathname, fileKey, fileList } = payload;
+      const { pathname, fieldKey, fileList } = payload;
 
       // substitute '/content' by '/api/files' in from the beginning of the pathname
       const url = [
@@ -115,7 +116,7 @@ const effects = {
       const res = await axios.post(url, data);
       const fileName = res.data[0];
 
-      as<Dispatch>(this).setValue({ key: fileKey, value: fileName });
+      as<Dispatch>(this).setValue({ key: fieldKey, value: fileName });
     } catch (err) {
       console.error(err);
       logoutIf401(err);

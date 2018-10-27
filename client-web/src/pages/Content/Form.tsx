@@ -107,7 +107,11 @@ const ArrayField = (props: FieldProps) => {
         <div className="border rounded p-2" key={`${arrayField.key}.${i}`}>
           {arrayField.fields.map(field => {
             const value = (item || {})[field.key];
-            return <Field {...props} key={field.key} field={field} value={value} />;
+            const _field = {
+              ...field,
+              key: `${arrayField.key}[${i}].${field.key}`,
+            };
+            return <Field {...props} key={field.key} field={_field} value={value} />;
           })}
           <p>{JSON.stringify(arrayField)}</p>
           <p>{JSON.stringify(arrayValue)}</p>
@@ -119,7 +123,7 @@ const ArrayField = (props: FieldProps) => {
 
 interface FieldProps {
   setValue: { (payload: { key: string; value: any }): void };
-  upload: { (payload: { pathname: string; fileKey: string; fileList: FileList }): void };
+  upload: { (payload: { pathname: string; fieldKey: string; fileList: FileList }): void };
   location: Location;
   field: Types.Field;
   value: any;
@@ -160,7 +164,7 @@ const Field = (props: FieldProps) => {
           onUpload={fileList =>
             props.upload({
               pathname: props.location.pathname,
-              fileKey: props.field.key,
+              fieldKey: props.field.key,
               fileList,
             })
           }
