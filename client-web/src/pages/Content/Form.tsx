@@ -26,8 +26,6 @@ const Form = (props: Props) => {
   const hasTabs = props.contentPage.contentType.tabs.length > 0;
   const { isSaving } = props;
 
-  console.log('values', props.contentPage.content.fields);
-
   return (
     hasTabs && (
       <div className={classes.container}>
@@ -265,7 +263,6 @@ function getFileLink(props: FieldProps) {
     }
   }
 
-  console.log('link', link);
   return link;
 }
 

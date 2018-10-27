@@ -20,8 +20,6 @@ const FileField = (props: Props) => {
   const { label, value } = props;
   const filename = last((value || '').split('/'));
 
-  console.log('process.env', process.env);
-
   return (
     <div className={classes.field}>
       <label className={classes.label}>{label}</label>
