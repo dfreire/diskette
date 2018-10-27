@@ -26,8 +26,8 @@ const ImageField = (props: Props) => {
         <img src={props.value} />
         <div className={classes.buttonsContainer}>
           {isLink(href) && (
-            <a className={classes.button} href={href}>
-              <Icon name="external-link" />
+            <a className={classes.button} href={href} target="_blank">
+              <Icon name="external-link-square" />
             </a>
           )}
           <button className={classes.button} onClick={onUpload}>

@@ -1,0 +1,7 @@
+http://localhost:3050 {
+  proxy /api http://localhost:3500
+  
+  proxy / http://localhost:3000 {
+    websocket
+  }
+}

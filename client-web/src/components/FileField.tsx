@@ -29,8 +29,8 @@ const FileField = (props: Props) => {
         <input className={classes.input} type="text" value={filename} disabled />
         <div className={classes.buttonsContainer}>
           {isLink(props.value) && (
-            <a className={classes.button} href={value}>
-              <Icon name="external-link" />
+            <a className={classes.button} href={value} target="_blank">
+              <Icon name="external-link-square" />
             </a>
           )}
           <button className={classes.button} onClick={onUpload}>

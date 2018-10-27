@@ -12,41 +12,48 @@ const upload = multer({ dest: config.DK_UPLOAD_DIR });
 
 const router = Router();
 
+const imageExts = ['.jpg', '.jpeg', '.png', '.gif'];
+
 router.get('/*', async (req, res) => {
   try {
     const pathname = req.params[0];
-
-    const width = parseInt(req.query.w || 0) || null;
-    const height = parseInt(req.query.h || 0) || null;
-
-    const fileDir = path.dirname(pathname);
-    const cacheDir = path.join(config.DK_CACHE_DIR, fileDir);
-    fs.mkdirpSync(cacheDir);
-
     const ext = path.extname(pathname);
-    let fileName = path.basename(pathname, ext);
-    if (width > 0 || height > 0) {
-      fileName += '-';
-    }
-    if (width > 0) {
-      fileName += width;
-    }
-    if (height > 0) {
-      fileName += 'x' + height;
-    }
-    fileName += ext;
+    const file = path.join(config.DK_CONTENT_DIR, pathname);
 
-    const cacheFile = path.join(cacheDir, fileName);
+    if (imageExts.indexOf(ext) >= 0) {
+      const width = parseInt(req.query.w || 0) || null;
+      const height = parseInt(req.query.h || 0) || null;
 
-    if (!fs.existsSync(cacheFile)) {
-      await sharp(path.join(config.DK_CONTENT_DIR, pathname))
-        .resize(width, height)
-        .max()
-        .withoutEnlargement()
-        .toFile(cacheFile);
+      const fileDir = path.dirname(pathname);
+      const cacheDir = path.join(config.DK_CACHE_DIR, fileDir);
+      fs.mkdirpSync(cacheDir);
+
+      let fileName = path.basename(pathname, ext);
+      if (width > 0 || height > 0) {
+        fileName += '-';
+      }
+      if (width > 0) {
+        fileName += width;
+      }
+      if (height > 0) {
+        fileName += 'x' + height;
+      }
+      fileName += ext;
+
+      const cacheFile = path.join(cacheDir, fileName);
+
+      if (!fs.existsSync(cacheFile)) {
+        await sharp(file)
+          .resize(width, height)
+          .max()
+          .withoutEnlargement()
+          .toFile(cacheFile);
+      }
+
+      res.sendFile(cacheFile);
+    } else {
+      res.sendFile(file);
     }
-
-    res.sendFile(cacheFile);
   } catch (err) {
     console.error(err);
     res.sendStatus(500);

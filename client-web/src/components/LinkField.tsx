@@ -20,7 +20,7 @@ const LinkField = (props: Props) => (
       />
       {isLink(props.value) && (
         <a className={classes.linkIcon} href={props.value}>
-          <Icon name="external-link" />
+          <Icon name="external-link-square" />
         </a>
       )}
     </div>
