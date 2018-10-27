@@ -109,7 +109,6 @@ const ArrayField = (props: FieldProps) => {
           <button
             className="p-1 text-grey hover:text-black"
             onClick={() => {
-              console.log('click minus');
               props.setValue({ key: `${arrayField.key}[${i}]`, value: null });
             }}
           >
@@ -128,7 +127,6 @@ const ArrayField = (props: FieldProps) => {
       <button
         className="p-1 text-grey hover:text-black"
         onClick={() => {
-          console.log('click plus');
           props.setValue({ key: `${arrayField.key}[${arrayValue.length}]`, value: {} });
         }}
       >
