@@ -111,8 +111,6 @@ const ArrayField = (props: FieldProps) => {
   };
 
   const onDragEnd = (result: DropResult, provided: any) => {
-    console.log('onDragEnd', { result, provided });
-
     if (result.source != null && result.destination != null) {
       const oldPos = result.source.index;
       const newPos = result.destination.index;
