@@ -40,11 +40,13 @@ class Dirs extends React.Component<Props, State> {
 
     return (
       <div className={classes.container}>
-        <div className={classes.addButtonContainer}>
-          <button className={classes.addButton} onClick={() => openCreateModal({ firstContentType })}>
-            <Icon name="plus" />
-          </button>
-        </div>
+        {firstContentType != null && (
+          <div className={classes.addButtonContainer}>
+            <button className={classes.addButton} onClick={() => openCreateModal({ firstContentType })}>
+              <Icon name="plus" />
+            </button>
+          </div>
+        )}
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable">
             {(provided, snapshot) => (
