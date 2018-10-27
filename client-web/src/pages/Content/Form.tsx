@@ -12,6 +12,7 @@ import NumberField from '../../components/NumberField';
 import LinkField from '../../components/LinkField';
 import SelectField from '../../components/SelectField';
 import QuerySelectField from '../../components/QuerySelectField';
+const { Icon } = require('react-fa');
 
 interface Props extends ContentModel.State, ContentModel.Dispatch, UiModel.State {
   history: any;
@@ -104,7 +105,16 @@ const ArrayField = (props: FieldProps) => {
     <React.Fragment>
       <h2 className="mt-3 mb-1">{arrayField.label}</h2>
       {arrayValue.map((item, i) => (
-        <div className="border rounded p-2" key={`${arrayField.key}.${i}`}>
+        <div className="border rounded p-2 my-2" key={`${arrayField.key}.${i}`}>
+          <button
+            className="p-1 text-grey hover:text-black"
+            onClick={() => {
+              console.log('click minus');
+              props.setValue({ key: `${arrayField.key}[${i}]`, value: null });
+            }}
+          >
+            <Icon name="minus" />
+          </button>
           {arrayField.fields.map(field => {
             const value = (item || {})[field.key];
             const _field = {
@@ -113,10 +123,17 @@ const ArrayField = (props: FieldProps) => {
             };
             return <Field {...props} key={field.key} field={_field} value={value} />;
           })}
-          <p>{JSON.stringify(arrayField)}</p>
-          <p>{JSON.stringify(arrayValue)}</p>
         </div>
       ))}
+      <button
+        className="p-1 text-grey hover:text-black"
+        onClick={() => {
+          console.log('click plus');
+          props.setValue({ key: `${arrayField.key}[${arrayValue.length}]`, value: {} });
+        }}
+      >
+        <Icon name="plus" />
+      </button>
     </React.Fragment>
   );
 };

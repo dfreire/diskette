@@ -1,4 +1,4 @@
-import { set } from 'lodash';
+import { isArray, set } from 'lodash';
 import axios from 'axios';
 import * as UserModel from './User';
 import * as Types from './Types';
@@ -62,7 +62,13 @@ const reducers = {
   setValue(state: State, payload: { key: string; value: any }) {
     const { key, value } = payload;
     const contentPage = { ...state.contentPage };
-    set(contentPage.content.fields, key, value);
+    const { fields } = contentPage.content;
+    set(fields, key, value);
+    Object.keys(fields).forEach(k => {
+      if (isArray(fields[k])) {
+        fields[k] = (fields[k] as Array<any>).filter(item => item != null);
+      }
+    });
     return { ...state, contentPage };
   },
 
