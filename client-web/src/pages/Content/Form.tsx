@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import { connect } from 'react-redux';
 import * as queryString from 'query-string';
 import * as ContentModel from '../../models/Content';
@@ -100,33 +101,68 @@ const Tab = (props: TabProps) => {
 
 const ArrayField = (props: FieldProps) => {
   const arrayField = props.field as Types.ArrayField;
-  const arrayValue = (props.value || [{}]) as object[];
+  const arrayValue = (props.value || []) as object[];
+
+  const reorder = (original: object[], oldPos: number, newPos: number) => {
+    const reordered = Array.from(original);
+    const [removed] = reordered.splice(oldPos, 1);
+    reordered.splice(newPos, 0, removed);
+    return reordered;
+  };
+
+  const onDragEnd = (result: DropResult, provided: any) => {
+    console.log('onDragEnd', { result, provided });
+
+    if (result.source != null && result.destination != null) {
+      const oldPos = result.source.index;
+      const newPos = result.destination.index;
+      const reordered = reorder(arrayValue, oldPos, newPos);
+      props.setValue({ key: arrayField.key, value: reordered });
+    }
+  };
 
   return (
     <React.Fragment>
       <h3 className="mt-3 mb-1">{arrayField.label}</h3>
-      {arrayValue.map((item, i) => (
-        <div className="border rounded p-2 mt-2 relative" key={`${arrayField.key}.${i}`}>
-          <div className="absolute pin-t pin-r">
-            <button
-              className="p-1 text-grey hover:text-red"
-              onClick={() => {
-                props.setValue({ key: `${arrayField.key}[${i}]`, value: null });
-              }}
-            >
-              <Icon name="minus-circle" />
-            </button>
-          </div>
-          {arrayField.fields.map(field => {
-            const value = (item || {})[field.key];
-            const _field = {
-              ...field,
-              key: `${arrayField.key}[${i}].${field.key}`,
-            };
-            return <Field {...props} key={field.key} field={_field} value={value} />;
-          })}
-        </div>
-      ))}
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="droppable">
+          {(provided, snapshot) => (
+            <div ref={provided.innerRef}>
+              {arrayValue.map((item, i) => (
+                <Draggable key={`${arrayField.key}.${i}`} draggableId={`draggable-${i}`} index={i}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps as any}
+                      {...provided.dragHandleProps as any}
+                      className="border rounded p-2 mt-2 relative"
+                    >
+                      <div className="absolute pin-t pin-r">
+                        <button
+                          className="p-1 text-grey hover:text-red"
+                          onClick={() => {
+                            props.setValue({ key: `${arrayField.key}[${i}]`, value: null });
+                          }}
+                        >
+                          <Icon name="minus-circle" />
+                        </button>
+                      </div>
+                      {arrayField.fields.map(field => {
+                        const value = (item || {})[field.key];
+                        const _field = {
+                          ...field,
+                          key: `${arrayField.key}[${i}].${field.key}`,
+                        };
+                        return <Field {...props} key={field.key} field={_field} value={value} />;
+                      })}
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
       <div className="text-right">
         <button
           className="p-1 text-grey hover:text-green"
