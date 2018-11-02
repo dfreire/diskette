@@ -19,7 +19,7 @@ const LinkField = (props: Props) => (
         onChange={evt => props.onChange(evt.target.value)}
       />
       {isLink(props.value) && (
-        <a className={classes.linkIcon} href={props.value}>
+        <a className={classes.linkIcon} href={props.value} target="_blank">
           <Icon name="external-link-square" />
         </a>
       )}

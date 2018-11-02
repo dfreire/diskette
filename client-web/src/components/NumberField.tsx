@@ -4,6 +4,11 @@ const NumberFormat = require('react-number-format');
 interface Props {
   label: string;
   value: number;
+  decimalPlaces: number;
+  decimalSeparator: string;
+  thousandSeparator: string;
+  prefix: string;
+  suffix: string;
   onChange: { (value: number): void };
 }
 
@@ -26,7 +31,7 @@ class NumberField extends React.Component<Props, State> {
   };
 
   render() {
-    const { label, onChange } = this.props;
+    const { label, decimalPlaces, decimalSeparator, thousandSeparator, prefix, suffix, onChange } = this.props;
     const { values } = this.state;
 
     return (
@@ -34,8 +39,11 @@ class NumberField extends React.Component<Props, State> {
         <label className={classes.label}>{label}</label>
         <NumberFormat
           className={classes.input}
-          decimalSeparator=","
-          decimalScale={2}
+          decimalScale={decimalPlaces}
+          decimalSeparator={decimalSeparator}
+          thousandSeparator={thousandSeparator}
+          prefix={prefix}
+          suffix={suffix}
           value={values.value}
           isNumericString={true}
           onValueChange={(values: NumberFormatValues) => {

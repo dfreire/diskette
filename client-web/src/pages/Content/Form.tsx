@@ -203,9 +203,15 @@ const Field = (props: FieldProps) => {
         />
       );
     case 'number':
+      const field = props.field as Types.NumberField;
       return (
         <NumberField
           label={props.field.label}
+          decimalPlaces={field.decimalPlaces}
+          decimalSeparator={field.decimalSeparator}
+          thousandSeparator={field.thousandSeparator}
+          prefix={field.prefix}
+          suffix={field.suffix}
           value={props.value}
           onChange={value => props.setValue({ key: props.field.key, value })}
         />

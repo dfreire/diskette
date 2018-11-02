@@ -1,3 +1,4 @@
+import { first, last, size } from 'lodash';
 import * as React from 'react';
 import { isLink } from './util';
 const { Icon } = require('react-fa');
@@ -17,13 +18,19 @@ const ImageField = (props: Props) => {
   };
 
   const { value } = props;
-  const href = (value.split('?') || '')[0];
+  const href = first(value.split('?'));
+  const filename = last((href || '').split('/'));
 
   return (
     <div className={classes.field}>
       <label className={classes.label}>{props.label}</label>
       <div className={classes.imageContainer}>
         <img src={props.value} />
+        {size(filename) > 0 && (
+          <div>
+            <input className={classes.filename} type="text" value={filename} disabled />
+          </div>
+        )}
         <div className={classes.buttonsContainer}>
           {isLink(href) && (
             <a className={classes.button} href={href} target="_blank">
@@ -56,6 +63,7 @@ const classes = {
   imageContainer: 'p-2 w-full border rounded relative',
   buttonsContainer: 'absolute pin-t pin-r bg-white p-1 rounded-bl',
   button: 'p-1 text-grey hover:text-black',
+  filename: 'w-full text-grey text-sm',
 };
 
 export default ImageField;

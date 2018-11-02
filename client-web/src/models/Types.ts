@@ -37,7 +37,7 @@ export interface NumberField extends Field {
   value: number;
   decimalPlaces: number;
   decimalSeparator: string;
-  thousandsSeparator: string;
+  thousandSeparator: string;
   prefix: string;
   suffix: string;
 }
