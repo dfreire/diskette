@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { init } from '@rematch/core';
-import registerServiceWorker from './registerServiceWorker';
+import { unregister } from './registerServiceWorker';
 import * as Modal from 'react-modal';
 import * as models from './models';
 import App from './App';
@@ -31,5 +31,5 @@ if (window.location.href.indexOf('localhost:3051') >= 0) {
     );
   });
 
-  registerServiceWorker();
+  unregister();
 }
