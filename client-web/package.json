@@ -6,7 +6,7 @@
     "@rematch/core": "^0.6.0",
     "@types/lodash": "^4.14.117",
     "axios": "^0.18.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.19",
     "ow": "^0.3.0",
     "query-string": "^6.0.0",
     "react": "^16.6.0",
